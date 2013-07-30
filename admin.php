@@ -221,12 +221,13 @@ function email_add_menu_page_callback() {
 					<tr valign="top">
 						<th scope="row"><label for="<?php echo $email_message; ?>">Message</label></th>
 						<td>
-							<div>You may use <code>[action]</code>, <code>[the_meta]</code>, <code>[permalink]</code>, <code>[post_type]</code>, <code>[recipient]</code>, <code>[site_title]</code></div>
+
+							<p>See the Glossary of Shortcodes available for use in this template.</p>
 
 							<?php
 							$template = email_template_new();
 
-							wp_editor( $template, 'editpost' );
+							wp_editor( $template, 'editpost', array( 'media_buttons' => false, 'tinymce' => false, 'quicktags' => false ) );
 
 							?>
 						</td>
@@ -242,6 +243,88 @@ function email_add_menu_page_callback() {
 			</p>
 
 		</form>
+
+		<h2>Glossary of Shortcodes</h2>
+
+		<dl>
+
+			<dt><code>[action]</code></dt>
+			<dd>The type of action that took place such as "new", "updated", "deleted".</dd>
+
+			<dt><code>[post_type]</code></dt>
+			<dd>The type of post being referred to, such as "post", "page", or a custom post type.</dd>
+
+			<dt><code>[permalink]</code></dt>
+			<dd>The link to the post.</dd>
+
+			<dt><code>[the_meta]</code></dt>
+			<dd>An unordered list of all post meta attached to the post.</dd>
+
+			<dt><code>[to_emails]</code></dt>
+			<dd>A comma separated list of email addresses in the "To" field.</dd>
+
+			<dt><code>[from_email]</code></dt>
+			<dd>The name of the sender.</dd>
+
+			<dt><code>[from_name]</code></dt>
+			<dd>The email addresss of the sender.</dd>
+
+			<dt><code>[to_names]</code></dt>
+			<dd>A comma separated list of names associated with the addresses in the "To" field.</dd>
+
+			<dt><code>[cc_emails]</code></dt>
+			<dd>A comma separated list of email addresses in the "CC" field.</dd>
+
+			<dt><code>[cc_names]</code></dt>
+			<dd>A comma separated list of names associated with the addresses in the "CC" field.</dd>
+
+			<dt><code>[bcc_emails]</code></dt>
+			<dd>A comma separated list of email addresses in the "BCC" field.</dd>
+
+			<dt><code>[bcc_names]</code></dt>
+			<dd>A comma separated list of names associated with the addresses in the "BCC" field.</dd>
+
+			<dt><code>[site_title]</code></dt>
+			<dd>The title of this site.</dd>
+
+			<dt><code>[home_url]</code></dt>
+			<dd>The home page URL of this site.</dd>
+
+			<dt><code>[admin_url]</code></dt>
+			<dd>The URL of this site's WordPress dashboard.</dd>
+
+			<dt><code>[old_status]</code></dt>
+			<dd>The old, or previous, status of the post.</dd>
+
+			<dt><code>[new_status]</code></dt>
+			<dd>The new, or updated, satus of the post.</dd>
+
+			<dt><code>[edit_post_url]</code></dt>
+			<dd>A direct link to the edit screen of the post.</dd>
+
+			<dt><code>[post_id]</code></dt>
+			<dd>The ID of the post.</dd>
+
+			<dt><code>[post_author]</code></dt>
+			<dd>The display name of the author of the post.</dd>
+
+			<dt><code>[post_author_email]</code></dt>
+			<dd>The email address of the author of the post.</dd>
+
+			<dt><code>[post_modified_author]</code></dt>
+			<dd>The display name of the author that modified the post.</dd>
+
+			<dt><code>[post_modified_author_email]</code></dt>
+			<dd>The email address of the author that modified the post.</dd>
+
+			<dt><code>[post_date]</code></dt>
+			<dd>The date the post was published. This will only work with published posts.</dd>
+
+			<dt><code>[post_modified_date]</code></dt>
+			<dd>The date the post was modified. This is the timestamp of current action.</dd>
+
+		</dl>
+
 	</div>
 
 <?php
