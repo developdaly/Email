@@ -1,6 +1,6 @@
 <?php
 
-function email_template_new() {
+function email_template_new( $post_id ) {
 
 $output = '
 A new [post_type] (#[post_id] "[post_title") was created by [post_author]

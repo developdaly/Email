@@ -7,10 +7,12 @@
  * Author URI: http://developdaly.com/
  */
 
-require_once( WP_PLUGIN_DIR .'/email/admin.php' );
-require_once( WP_PLUGIN_DIR .'/email/actions/router.php' );
-require_once( WP_PLUGIN_DIR .'/email/actions/new.php' );
-require_once( WP_PLUGIN_DIR .'/email/templates/new.php' );
+define( 'EMAIL_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
+
+require_once( EMAIL_DIR . 'admin.php' );
+require_once( EMAIL_DIR . 'shortcodes.php' );
+require_once( EMAIL_DIR . 'actions/router.php' );
+require_once( EMAIL_DIR . 'templates/new.php' );
 
 add_action( 'init',						'email_register' );
 add_action( 'transition_post_status',	'email_action_router', 10, 3 );

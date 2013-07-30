@@ -67,9 +67,10 @@ function email_add_menu_page_callback() {
 	$email_action	= 'email_action';
 	$email_type		= 'email_type';
 	$email_from		= 'email_from';
-	$email_to		= 'email_recipients_to';
-	$email_cc		= 'email_recipients_cc';
-	$email_bcc		= 'email_recipients_bcc';
+	$email_to		= 'email_to';
+	$email_cc		= 'email_cc';
+	$email_bcc		= 'email_bcc';
+	$email_subject	= 'email_subject';
 	$email_message	= 'email_message';
 	$email_hidden	= 'email_hidden';
 
@@ -77,7 +78,7 @@ function email_add_menu_page_callback() {
 	// If they did, this hidden field will be set to 'Y'
 	if( isset($_POST[ $email_hidden ]) && $_POST[ $email_hidden ] == 'Y' ) {
 
-		$title = $_POST['email_action'] .' / '. $_POST['email_type'] .' / '. $_POST['email_recipients_to'];
+		$title = $_POST['email_action'] .' / '. $_POST['email_type'] .' / '. $_POST['email_to'];
 
 		$args = array(
 			'post_type' => 'email',
@@ -133,9 +134,13 @@ function email_add_menu_page_callback() {
 
 		// Insert the post into the database
 		$post_id = wp_insert_post( $post );
-		update_post_meta( $post_id, $email_action, $_POST['email_action'] );
-		update_post_meta( $post_id, $send_type, $_POST['email_type'] );
-		update_post_meta( $post_id, $send_recipients_to, $_POST['send_recipients_to'] );
+		update_post_meta( $post_id, $email_action,	$_POST['email_action'] );
+		update_post_meta( $post_id, $email_type,	$_POST['email_type'] );
+		update_post_meta( $post_id, $email_to,		$_POST['email_to'] );
+		update_post_meta( $post_id, $email_cc,		$_POST['email_cc'] );
+		update_post_meta( $post_id, $email_bcc,		$_POST['email_bcc'] );
+		update_post_meta( $post_id, $email_subject,	$_POST['email_subject'] );
+		update_post_meta( $post_id, $email_message,	$_POST['email_message'] );
 
 		echo '<div class="updated"><p>When <strong>'. $_POST['email_type'] .'</strong> is <strong>'. $_POST['email_action'] .'</strong> send an email to <strong>'. $_POST['email_to'] .'s</strong></p></div>';
 
@@ -219,6 +224,13 @@ function email_add_menu_page_callback() {
 					</tr>
 
 					<tr valign="top">
+						<th scope="row"><label for="<?php echo $email_subject; ?>">Subject</label></th>
+						<td>
+							<input type="text" name="<?php echo $email_subject; ?>">
+						</td>
+					</tr>
+
+					<tr valign="top">
 						<th scope="row"><label for="<?php echo $email_message; ?>">Message</label></th>
 						<td>
 
@@ -227,7 +239,7 @@ function email_add_menu_page_callback() {
 							<?php
 							$template = email_template_new();
 
-							wp_editor( $template, 'editpost', array( 'media_buttons' => false, 'tinymce' => false, 'quicktags' => false ) );
+							wp_editor( $template, $email_message, array( 'media_buttons' => false, 'tinymce' => false, 'quicktags' => false ) );
 
 							?>
 						</td>
