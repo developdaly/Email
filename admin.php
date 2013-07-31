@@ -61,6 +61,8 @@ function email_add_menu_page_callback() {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
 
+	$current_user = wp_get_current_user();
+
 	$send_options = get_option( 'email_settings' );
 
 	// variables for the field and option names
@@ -167,7 +169,7 @@ function email_add_menu_page_callback() {
 					<tr valign="top">
 						<th scope="row"><label for="<?php echo $email_type; ?>">Post Type</label></th>
 						<td>
-							<select name="<?php echo $email_type; ?>">
+							<select id="<?php echo $email_type; ?>" name="<?php echo $email_type; ?>" class="chosen-select" multiple="multiple" data-placeholder="Choose post types..." style="width: 50%">
 								<?php foreach( $types as $key => $value ) {
 									echo '<option val="'. $key .'">'. $value .'</option>';
 								}; ?>
@@ -178,7 +180,7 @@ function email_add_menu_page_callback() {
 					<tr valign="top">
 						<th scope="row"><label for="<?php echo $email_action; ?>">Action</label></th>
 						<td>
-							<select name="<?php echo $email_action; ?>">
+							<select id="<?php echo $email_action; ?>" name="<?php echo $email_action; ?>" class="chosen-select" multiple="multiple" data-placeholder="Choose actions..." style="width: 50%">
 								<?php foreach( $actions as $key => $value ) {
 									echo '<option val="'. $key .'">'. $value .'</option>';
 								}; ?>
@@ -188,45 +190,49 @@ function email_add_menu_page_callback() {
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_from; ?>">To</label></th>
+						<th scope="row"><label for="select_<?php echo $email_from; ?>">From</label></th>
 						<td>
-							<select name="<?php echo $email_from; ?>">
-								<?php wp_dropdown_roles(); ?>
-							</select>
+							<input type="text" id="<?php echo $email_from; ?>" name="<?php echo $email_from; ?>" style="width: 50%" value="<?php echo $current_user->user_email; ?>" placeholder="The email address to send from">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_to; ?>">To</label></th>
+						<th scope="row"><label for="select_<?php echo $email_to; ?>">To</label></th>
 						<td>
-							<select name="<?php echo $email_to; ?>">
+							<select id="select_<?php echo $email_to; ?>" name="select_<?php echo $email_to; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
+							<input type="text" id="<?php echo $email_to; ?>" name="<?php echo $email_to; ?>" style="width: 70%">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_cc; ?>">CC</label></th>
+						<th scope="row"><label for="select_<?php echo $email_cc; ?>">CC</label></th>
 						<td>
-							<select name="<?php echo $email_cc; ?>">
+							<select id="select_<?php echo $email_cc; ?>" name="select_<?php echo $email_cc; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
+							<input type="text" id="<?php echo $email_cc; ?>" name="<?php echo $email_cc; ?>" style="width: 70%">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_bcc; ?>">BCC</label></th>
+						<th scope="row"><label for="select_<?php echo $email_bcc; ?>">BCC</label></th>
 						<td>
-							<select name="<?php echo $email_bcc; ?>">
+							<select id="select_<?php echo $email_bcc; ?>" name="select_<?php echo $email_bcc; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
+							<input type="text" id="<?php echo $email_bcc; ?>" name="<?php echo $email_bcc; ?>" style="width: 70%">
 						</td>
 					</tr>
 
 					<tr valign="top">
 						<th scope="row"><label for="<?php echo $email_subject; ?>">Subject</label></th>
 						<td>
-							<input type="text" name="<?php echo $email_subject; ?>">
+							<input type="text" name="<?php echo $email_subject; ?>" style="width: 50%" value="[[site_title]] [post_title] [action]"> Example: "[My Site] Hello World! updated"
 						</td>
 					</tr>
 
@@ -236,12 +242,7 @@ function email_add_menu_page_callback() {
 
 							<p>See the Glossary of Shortcodes available for use in this template.</p>
 
-							<?php
-							$template = email_template_new();
-
-							wp_editor( $template, $email_message, array( 'media_buttons' => false, 'tinymce' => false, 'quicktags' => false ) );
-
-							?>
+							<?php wp_editor( false, $email_message, array( 'media_buttons' => false, 'tinymce' => false, 'quicktags' => false ) ); ?>
 						</td>
 					</tr>
 
@@ -341,4 +342,38 @@ function email_add_menu_page_callback() {
 
 <?php
 
+}
+
+function email_get_users() {
+	global $wpdb;
+	$role = $_POST['role'];
+
+	$users = get_users( array( 'role' => $role ) );
+
+	if( empty( $users ) ) {
+		echo '';
+		die();
+	} else {
+
+		$prefix = '';
+		$users_list = '';
+		foreach( $users as $user ) {
+			$users_list .= $prefix . $user->data->user_email;
+			$prefix = ', ';
+		}
+
+		echo $users_list;
+
+	}
+
+	die();
+}
+
+function email_get_template() {
+	global $wpdb;
+	$action = $_POST['givenAction'];
+
+	echo email_template( $action[0] );
+
+	die();
 }

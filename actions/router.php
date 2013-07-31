@@ -21,12 +21,10 @@ function email_action_router( $new_status, $old_status, $post ) {
 
 		if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'new' == $new_status ) ) {
 			email_action( 'new', $post->ID, $email->ID );
-			error_log( 'new action' );
 		}
 
 		if ( ($new_status == $old_status) &&  ( $email_action == 'updated' ) ) {
 			email_action( 'updated', $post->ID, $email->ID );
-			error_log( 'updated action' );
 		}
 
 	}
