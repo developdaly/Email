@@ -24,13 +24,13 @@ function email_action_router( $new_status, $old_status, $post ) {
 		}
 
 		if ( ($new_status == $old_status) &&  ( $email_action == 'updated' ) ) {
-			email_action( 'updated', $post->ID, $email->ID );
+			email_action( 'updated', $post->ID, $email->ID, $old_status, $new_status );
 		}
 
 	}
 }
 
-function email_action( $action, $post_id, $email_id ) {
+function email_action( $action, $post_id, $email_id, $old_status, $new_status ) {
 
 	$post = get_post( $post_id );
 
@@ -93,7 +93,20 @@ function email_action( $action, $post_id, $email_id ) {
 	if( isset( $users_cc_list ))
 		$headers[] = 'Bcc: '. $users_bcc_list;
 
-	$mail = wp_mail( $users_to_list, $email_subject, $post->post_content, $headers );
+	$message = email_parse_message( $post_id, $old_status, $new_status );
+
+	$mail = wp_mail( $users_to_list, $email_subject, $message, $headers );
+
+	if( $mail ) {
+
+		$message = $headers .'<br><br>'. $message;
+
+		$args = array(
+			'post_title'	=> $email_subject,
+			'post_content'  => $message
+		);
+		wp_insert_post( $args );
+	}
 
 	return $mail;
 

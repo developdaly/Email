@@ -35,6 +35,41 @@ function email_register() {
 	);
 
 	register_post_type( 'email', $args );
+
+	$labels = array(
+		'name' => _x( 'Email Logs', 'email' ),
+		'singular_name' => _x( 'Email Log', 'email' ),
+		'add_new' => _x( 'Add New', 'email' ),
+		'add_new_item' => _x( 'Add New Email', 'email' ),
+		'edit_item' => _x( 'Edit Email Log', 'email' ),
+		'new_item' => _x( 'New Email Log', 'email' ),
+		'view_item' => _x( 'View Email Log', 'email' ),
+		'search_items' => _x( 'Search Emails Logs', 'email' ),
+		'not_found' => _x( 'No email logs found', 'email' ),
+		'not_found_in_trash' => _x( 'No email logs found in Trash', 'email' ),
+		'parent_item_colon' => _x( 'Parent Email Logs:', 'email' ),
+		'menu_name' => _x( 'Email Logs', 'email' ),
+	);
+
+	$args = array(
+		'labels' => $labels,
+		'hierarchical' => false,
+		'supports' => array( 'title', 'editor', 'custom-fields' ),
+		'public' => true,
+		'show_ui' => true,
+		'show_in_menu' => true,
+		'show_in_nav_menus' => true,
+		'publicly_queryable' => true,
+		'exclude_from_search' => false,
+		'has_archive' => true,
+		'query_var' => true,
+		'can_export' => true,
+		'rewrite' => true,
+		'capability_type' => 'post'
+	);
+
+	register_post_type( 'email_log', $args );
+
 }
 
 // Add page as submenu to Tools

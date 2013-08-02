@@ -10,7 +10,7 @@
 define( 'EMAIL_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 require_once( EMAIL_DIR . 'admin.php' );
-require_once( EMAIL_DIR . 'shortcodes.php' );
+require_once( EMAIL_DIR . 'parser.php' );
 require_once( EMAIL_DIR . 'actions/router.php' );
 require_once( EMAIL_DIR . 'templates/new.php' );
 
