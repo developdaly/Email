@@ -33,16 +33,67 @@ function email_action_router( $new_status, $old_status, $post ) {
 function email_action( $action, $post_id, $email_id ) {
 
 	$post = get_post( $post_id );
+
+	$email_action 		= get_post_meta( $email_id, 'email_action', true );
+	$email_type 		= get_post_meta( $email_id, 'email_type', true );
 	$email_from 		= get_post_meta( $email_id, 'email_from', true );
-	$email_from_address	= get_post_meta( $email_id, 'email_from_address' , true );
-	$email_to			= get_post_meta( $email_id, 'email_to' , true );
-	$email_subject		= get_post_meta( $email_id, 'email_subject' , true );
+	$email_from_address	= get_post_meta( $email_id, 'email_from_address', true );
+	$email_to 			= get_post_meta( $email_id, 'email_to', true );
+	$email_to_role 		= get_post_meta( $email_id, 'email_to_role', true );
+	$email_cc 			= get_post_meta( $email_id, 'email_cc', true );
+	$email_cc_role 		= get_post_meta( $email_id, 'email_cc_role', true );
+	$email_bcc 			= get_post_meta( $email_id, 'email_bcc', true );
+	$email_bcc_role 	= get_post_meta( $email_id, 'email_bcc_role', true );
+	$email_subject 		= get_post_meta( $email_id, 'email_subject', true );
+	$email_message 		= get_post_meta( $email_id, 'email_message', true );
+	$email_hidden 		= get_post_meta( $email_id, 'email_hidden', true );
 
-	$headers[] = 'From: '. $email_from .' <'. $email_from_address .'>';
-	$headers[] = 'Cc: John Q Codex <jqc@wordpress.org>';
-	$headers[] = 'Cc: iluvwp@wordpress.org'; // note you can just use a simple email address
+	// Build the comma separated list of email address for the TO field
+	$users_to_list = '';
+	if( !empty( $email_to_role ) ) {
+		$users_to = get_users( array( 'role' => $email_to_role ) );
+		foreach( $users_to as $user_to ) {
+			$users_to_list .= $user_to->user_email .', ';
+		}
+	}
+	if( !empty( $email_to ) ) {
+		$users_to_list .= $email_to;
+	}
 
-	$mail = wp_mail( $email_to, $email_subject, $post->post_content );
+	// Build the comma separated list of email address for the CC field
+	$users_cc_list = '';
+	if( !empty( $email_cc_role ) ) {
+		$users_cc = get_users( array( 'role' => $email_cc_role ) );
+		foreach( $users_cc as $user_cc ) {
+			$users_cc_list .= $user_cc->user_email .', ';
+		}
+	}
+	if( !empty( $email_cc ) ) {
+		$users_cc_list .= $email_cc;
+	}
+
+	// Build the comma separated list of email address for the BCC field
+	$users_bcc_list = '';
+	if( !empty( $email_bcc_role ) ) {
+		$users_bcc = get_users( array( 'role' => $email_bcc_role ) );
+		foreach( $users_bcc as $user_bcc ) {
+			$users_bcc_list .= $user_bcc->user_email .', ';
+		}
+	}
+	if( !empty( $email_bcc ) ) {
+		$users_bcc_list .= $email_bcc;
+	}
+
+	if( isset( $email_from_address ) && isset( $email_from ) )
+		$headers[] = 'From: '. $email_from .' <'. $email_from_address .'>';
+
+	if( isset( $users_cc_list ))
+		$headers[] = 'Cc: '. $users_cc_list;
+
+	if( isset( $users_cc_list ))
+		$headers[] = 'Bcc: '. $users_bcc_list;
+
+	$mail = wp_mail( $users_to_list, $email_subject, $post->post_content, $headers );
 
 	return $mail;
 

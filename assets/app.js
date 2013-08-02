@@ -1,23 +1,7 @@
 jQuery(document).ready(function($) {
 
-	$('.chosen-select').chosen();
-
-	$('.select-role').chosen().on('change', function(evt, params) {
-
-		var currentVal	= $(this).next().next().val(),
-			nextId		= $(this).next().next().attr('id'),
-			givenRole	= $(this).val(),
-			data		= {
-				action: 'email_get_users',
-				role: givenRole
-			};
-
-		$.post(ajaxurl, data, function(response) {
-			if( response !== 0 ) {
-				$('#' + nextId).val( currentVal + response + ', ');
-			}
-		});
-
+	$('.chosen-select').chosen({
+		allow_single_deselect: true
 	});
 
 	$('#email_action').on('change', function(evt, params) {

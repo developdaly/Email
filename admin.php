@@ -56,6 +56,8 @@ function email_enqueue_scripts() {
 // Display the admin page
 function email_add_menu_page_callback() {
 
+	echo email_insert_post();
+
 	// Must be Editor to access the settings page.
 	if ( !current_user_can( 'edit_posts' ) ) {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
@@ -70,87 +72,20 @@ function email_add_menu_page_callback() {
 	$email_type		= 'email_type';
 	$email_from		= 'email_from';
 	$email_to		= 'email_to';
+	$email_to_role	= 'email_to_role';
 	$email_cc		= 'email_cc';
+	$email_cc_role	= 'email_cc_role';
 	$email_bcc		= 'email_bcc';
+	$email_bcc_role	= 'email_bcc_role';
 	$email_subject	= 'email_subject';
 	$email_message	= 'email_message';
 	$email_hidden	= 'email_hidden';
 
-	// See if the user has posted some information
-	// If they did, this hidden field will be set to 'Y'
-	if( isset($_POST[ $email_hidden ]) && $_POST[ $email_hidden ] == 'Y' ) {
-
-		$title = $_POST['email_action'] .' / '. $_POST['email_type'] .' / '. $_POST['email_to'];
-
-		$args = array(
-			'post_type' => 'email',
-			'meta_query' => array(
-				array(
-					'key' => 'email_action',
-					'value' => $_POST['email_action'],
-				),
-				array(
-					'key' => 'email_type',
-					'value' => $_POST['email_type'],
-				),
-				array(
-					'key' => 'email_from',
-					'value' => $_POST['email_from'],
-				),
-				array(
-					'key' => 'email_to',
-					'value' => $_POST['email_to'],
-				),
-				array(
-					'key' => 'email_cc',
-					'value' => $_POST['email_cc'],
-				),
-				array(
-					'key' => 'email_bcc',
-					'value' => $_POST['email_bcc'],
-				),
-				array(
-					'key' => 'email_subject',
-					'value' => $_POST['email_subject']
-				),
-				array(
-					'key' => 'email_message',
-					'value' => $_POST['email_message']
-				)
-			)
-		);
-		$existing = get_posts( $args );
-
-		if( $existing ) {
-			echo '<div class="updated"><p><strong>Email configuration already exists.</strong></p></div>';
-			return;
-		}
-
-		// Create post object
-		$post = array(
-			'post_title'	=> wp_strip_all_tags( $title ),
-			'post_content'	=> $_POST['email_message'],
-			'post_status'	=> 'publish',
-			'post_type'		=> 'email'
-		);
-
-		// Insert the post into the database
-		$post_id = wp_insert_post( $post );
-		update_post_meta( $post_id, $email_action,	$_POST['email_action'] );
-		update_post_meta( $post_id, $email_type,	$_POST['email_type'] );
-		update_post_meta( $post_id, $email_to,		$_POST['email_to'] );
-		update_post_meta( $post_id, $email_cc,		$_POST['email_cc'] );
-		update_post_meta( $post_id, $email_bcc,		$_POST['email_bcc'] );
-		update_post_meta( $post_id, $email_subject,	$_POST['email_subject'] );
-		update_post_meta( $post_id, $email_message,	$_POST['email_message'] );
-
-		echo '<div class="updated"><p>When <strong>'. $_POST['email_type'] .'</strong> is <strong>'. $_POST['email_action'] .'</strong> send an email to <strong>'. $_POST['email_to'] .'s</strong></p></div>';
-
-	} ?>
+	?>
 
 	<div class="wrap">
 
-		<h2><?php echo __( 'Add New Email Event', 'send' ) ?></h2>
+		<h2><?php echo __( 'Add New Email', 'send' ) ?></h2>
 
 		<form name="send" method="post" action="">
 
@@ -185,47 +120,46 @@ function email_add_menu_page_callback() {
 									echo '<option val="'. $key .'">'. $value .'</option>';
 								}; ?>
 							</select>
-
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="select_<?php echo $email_from; ?>">From</label></th>
+						<th scope="row"><label for="<?php echo $email_from; ?>">From</label></th>
 						<td>
 							<input type="text" id="<?php echo $email_from; ?>" name="<?php echo $email_from; ?>" style="width: 50%" value="<?php echo $current_user->user_email; ?>" placeholder="The email address to send from">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="select_<?php echo $email_to; ?>">To</label></th>
+						<th scope="row"><label for="<?php echo $email_to_role; ?>">To</label></th>
 						<td>
-							<select id="select_<?php echo $email_to; ?>" name="select_<?php echo $email_to; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+							<select id="<?php echo $email_to_role; ?>" name="<?php echo $email_to_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
-							<input type="text" id="<?php echo $email_to; ?>" name="<?php echo $email_to; ?>" style="width: 70%">
+							<input type="text" id="<?php echo $email_to; ?>" name="<?php echo $email_to; ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="select_<?php echo $email_cc; ?>">CC</label></th>
+						<th scope="row"><label for="<?php echo $email_cc_role; ?>">CC</label></th>
 						<td>
-							<select id="select_<?php echo $email_cc; ?>" name="select_<?php echo $email_cc; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+							<select id="<?php echo $email_cc_role; ?>" name="<?php echo $email_cc_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
-							<input type="text" id="<?php echo $email_cc; ?>" name="<?php echo $email_cc; ?>" style="width: 70%">
+							<input type="text" id="<?php echo $email_cc; ?>" name="<?php echo $email_cc; ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="select_<?php echo $email_bcc; ?>">BCC</label></th>
+						<th scope="row"><label for="<?php echo $email_bcc_role; ?>">BCC</label></th>
 						<td>
-							<select id="select_<?php echo $email_bcc; ?>" name="select_<?php echo $email_bcc; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+							<select id="<?php echo $email_bcc_role; ?>" name="<?php echo $email_bcc_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
-							<input type="text" id="<?php echo $email_bcc; ?>" name="<?php echo $email_bcc; ?>" style="width: 70%">
+							<input type="text" id="<?php echo $email_bcc; ?>" name="<?php echo $email_bcc; ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
 					</tr>
 
@@ -246,14 +180,16 @@ function email_add_menu_page_callback() {
 						</td>
 					</tr>
 
+					<tr valign="top">
+						<th scope="row"></th>
+						<td>
+							<input type="hidden" name="<?php echo $email_hidden; ?>" value="Y">
+							<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Setup Email') ?>" />
+						</td>
+					</tr>
+
 				</tbody>
 			</table>
-
-			<input type="hidden" name="<?php echo $email_hidden; ?>" value="Y">
-
-			<p class="submit">
-				<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Setup Email') ?>" />
-			</p>
 
 		</form>
 
@@ -341,6 +277,191 @@ function email_add_menu_page_callback() {
 	</div>
 
 <?php
+
+}
+
+function email_insert_post() {
+
+	// variables for the field and option names
+	$email_action 	= (isset($_POST['email_action']) 	? $_POST['email_action'] : '');
+	$email_type 	= (isset($_POST['email_type']) 		? $_POST['email_type'] : '');
+	$email_from 	= (isset($_POST['email_from']) 		? $_POST['email_from'] : '');
+	$email_to 		= (isset($_POST['email_to']) 		? $_POST['email_to'] : '');
+	$email_to_role 	= (isset($_POST['email_to_role']) 	? $_POST['email_to_role'] : '');
+	$email_cc 		= (isset($_POST['email_cc']) 		? $_POST['email_cc'] : '');
+	$email_cc_role 	= (isset($_POST['email_cc_role']) 	? $_POST['email_cc_role'] : '');
+	$email_bcc 		= (isset($_POST['email_bcc']) 		? $_POST['email_bcc'] : '');
+	$email_bcc_role = (isset($_POST['email_bcc_role']) 	? $_POST['email_bcc_role'] : '');
+	$email_subject 	= (isset($_POST['email_subject']) 	? $_POST['email_subject'] : '');
+	$email_message 	= (isset($_POST['email_message']) 	? $_POST['email_message'] : '');
+	$email_hidden 	= (isset($_POST['email_hidden']) 	? $_POST['email_hidden'] : '');
+
+	if( isset($email_hidden) && ( $email_hidden == 'Y' ) ) {
+
+		$errors = array();
+		$success = array();
+
+		if( empty( $email_type ) ) {
+			$errors[] = '<strong>ERROR</strong>: You must set a <strong>type</strong>.';
+		}
+
+		if( empty( $email_action ) ) {
+			$errors[] = '<strong>ERROR</strong>: You must set an <strong>action</strong>.';
+		}
+
+		if( empty( $email_subject ) ) {
+			$errors[] = '<strong>ERROR</strong>: You must set a <strong>subject</strong>.';
+		}
+
+		if( empty( $email_message ) ) {
+			$errors[] = '<strong>ERROR</strong>: You must set a <strong>message</strong>.';
+		}
+
+		if( empty( $email_to ) && empty( $email_to_role )) {
+			$errors[] = '<strong>ERROR</strong>: You must set the <strong>To field</strong>.';
+		}
+
+		$args = array(
+			'post_type' => 'email',
+			'meta_query' => array(
+				array(
+					'key' => 'email_action',
+					'value' => $email_action
+				),
+				array(
+					'key' => 'email_type',
+					'value' => $email_type
+				),
+				array(
+					'key' => 'email_from',
+					'value' => $email_from
+				),
+				array(
+					'key' => 'email_to',
+					'value' => $email_to
+				),
+				array(
+					'key' => 'email_to_role',
+					'value' => $email_to_role
+				),
+				array(
+					'key' => 'email_cc',
+					'value' => $email_cc
+				),
+				array(
+					'key' => 'email_cc_role',
+					'value' => $email_cc_role
+				),
+				array(
+					'key' => 'email_bcc',
+					'value' => $email_bcc
+				),
+				array(
+					'key' => 'email_bcc_role',
+					'value' => $email_bcc_role
+				),
+				array(
+					'key' => 'email_subject',
+					'value' => $email_subject
+				),
+				array(
+					'key' => 'email_message',
+					'value' => $email_message
+				)
+			)
+		);
+
+		$emails = get_posts( $args );
+
+		if( isset( $emails ) ) {
+
+			if( !empty( $emails ) ) {
+
+				foreach( $emails as $email ) {
+					$errors[] = '<a href="'. get_edit_post_link( $email->ID ) .'">Email configuration</a> already exists.';
+				}
+
+			}
+		}
+
+		if( !empty( $errors ) ) {
+			$output = '<div class="error">';
+			if( $errors ) {
+				$output .= '<ul>';
+				foreach( $errors as $error ) {
+					$output .= '<li>'. $error .'</li>';
+				}
+				$output .= '</ul>';
+			}
+			$output .= '</div>';
+			return $output;
+		}
+
+		$title = $email_type .' > '. $email_action;
+
+		// Create post object
+		$post = array(
+			'post_title'	=> wp_strip_all_tags( $title ),
+			'post_content'	=> $email_message,
+			'post_status'	=> 'publish',
+			'post_type'		=> 'email'
+		);
+
+		// Insert the post into the database
+		$post_id = wp_insert_post( $post );
+		if ( !empty( $email_action ) ) {
+			update_post_meta( $post_id, 'email_action', $email_action );
+			$success[] = $email_action;
+		}
+		if ( !empty( $email_type ) ) {
+			update_post_meta( $post_id, 'email_type', $email_type );
+			$success[] = $email_type;
+		}
+		if ( !empty( $email_to ) ) {
+			update_post_meta( $post_id, 'email_to', $email_to );
+			$success[] = $email_to;
+		}
+		if ( !empty( $email_to_role ) ) {
+			update_post_meta( $post_id, 'email_to_role', $email_to_role );
+			$success[] = $email_to_role;
+		}
+		if ( !empty( $email_cc ) ) {
+			update_post_meta( $post_id, 'email_cc', $email_cc );
+			$success[] = $email_cc;
+		}
+		if ( !empty( $email_cc_role ) ) {
+			update_post_meta( $post_id, 'email_cc_role',	$email_cc_role );
+			$success[] = $email_cc_role;
+		}
+		if ( !empty( $email_bcc ) ) {
+			update_post_meta( $post_id, 'email_bcc', $email_bcc );
+			$success[] = $email_bcc;
+		}
+		if ( !empty( $email_bcc_role ) ) {
+			update_post_meta( $post_id, 'email_bcc_role',$email_bcc_role );
+			$success[] = $email_bcc_role;
+		}
+		if ( !empty( $email_subject ) ) {
+			update_post_meta( $post_id, 'email_subject',	$email_subject );
+			$success[] = $email_subject;
+		}
+
+		$success[] = 'Edit <a href="'. get_edit_post_link( $post_id ) .'">'. get_the_title( $post_id ) .'</a>';
+
+		if( !empty( $post_id ) ) {
+			$output = '<div class="updated">';
+			if( $success ) {
+				$output .= '<ul>';
+				foreach( $success as $item ) {
+					$output .= '<li>'. $item .'</li>';
+				}
+				$output .= '</ul>';
+			}
+			$output .= '</div>';
+			return $output;
+		}
+
+	}
 
 }
 
