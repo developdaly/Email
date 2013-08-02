@@ -93,19 +93,23 @@ function email_action( $action, $post_id, $email_id, $old_status, $new_status ) 
 	if( isset( $users_cc_list ))
 		$headers[] = 'Bcc: '. $users_bcc_list;
 
-	$message = email_parse_message( $post_id, $old_status, $new_status );
+	$parsed_message = email_parser( $post_id, $email_id, $old_status, $new_status );
+	$parsed_subject = email_parser( $post_id, $email_id, $old_status, $new_status, $email_subject );
 
-	$mail = wp_mail( $users_to_list, $email_subject, $message, $headers );
+	$mail = wp_mail( $users_to_list, $parsed_subject, $parsed_message, $headers );
 
 	if( $mail ) {
 
-		$message = $headers .'<br><br>'. $message;
-
 		$args = array(
-			'post_title'	=> $email_subject,
-			'post_content'  => $message
+			'post_title'	=> $parsed_subject,
+			'post_type'		=> 'email_log',
+			'post_content'  => $parsed_message
 		);
-		wp_insert_post( $args );
+		$log_id = wp_insert_post( $args );
+
+		foreach( $headers as $key => $val ) {
+			update_post_meta( $post_id, $key, $val );
+		}
 	}
 
 	return $mail;
