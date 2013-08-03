@@ -10,9 +10,9 @@
 define( 'EMAIL_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 require_once( EMAIL_DIR . 'admin.php' );
+require_once( EMAIL_DIR . 'templates.php' );
+require_once( EMAIL_DIR . 'router.php' );
 require_once( EMAIL_DIR . 'parser.php' );
-require_once( EMAIL_DIR . 'actions/router.php' );
-require_once( EMAIL_DIR . 'templates/new.php' );
 
 add_action( 'init',							'email_register' );
 add_action( 'transition_post_status',		'email_action_router', 10, 3 );

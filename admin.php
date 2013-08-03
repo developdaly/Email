@@ -48,7 +48,7 @@ function email_register() {
 		'not_found' => _x( 'No email logs found', 'email' ),
 		'not_found_in_trash' => _x( 'No email logs found in Trash', 'email' ),
 		'parent_item_colon' => _x( 'Parent Email Logs:', 'email' ),
-		'menu_name' => _x( 'Email Logs', 'email' ),
+		'menu_name' => _x( 'Logs', 'email' ),
 	);
 
 	$args = array(
@@ -57,7 +57,7 @@ function email_register() {
 		'supports' => array( 'title', 'editor', 'custom-fields' ),
 		'public' => true,
 		'show_ui' => true,
-		'show_in_menu' => true,
+		'show_in_menu' => 'edit.php?post_type=email',
 		'show_in_nav_menus' => true,
 		'publicly_queryable' => true,
 		'exclude_from_search' => false,
@@ -65,7 +65,7 @@ function email_register() {
 		'query_var' => true,
 		'can_export' => true,
 		'rewrite' => true,
-		'capability_type' => 'post'
+		'capability_type' => 'post',
 	);
 
 	register_post_type( 'email_log', $args );

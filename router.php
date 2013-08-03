@@ -108,7 +108,7 @@ function email_action( $action, $post_id, $email_id, $old_status, $new_status ) 
 		$log_id = wp_insert_post( $args );
 
 		foreach( $headers as $key => $val ) {
-			update_post_meta( $post_id, $key, $val );
+			update_post_meta( $log_id, $key, $val );
 		}
 	}
 
