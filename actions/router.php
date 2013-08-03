@@ -37,7 +37,7 @@ function email_action( $action, $post_id, $email_id, $old_status, $new_status ) 
 	$email_action 		= get_post_meta( $email_id, 'email_action', true );
 	$email_type 		= get_post_meta( $email_id, 'email_type', true );
 	$email_from 		= get_post_meta( $email_id, 'email_from', true );
-	$email_from_address	= get_post_meta( $email_id, 'email_from_address', true );
+	$email_from_name	= get_post_meta( $email_id, 'email_from_name', true );
 	$email_to 			= get_post_meta( $email_id, 'email_to', true );
 	$email_to_role 		= get_post_meta( $email_id, 'email_to_role', true );
 	$email_cc 			= get_post_meta( $email_id, 'email_cc', true );
@@ -85,7 +85,7 @@ function email_action( $action, $post_id, $email_id, $old_status, $new_status ) 
 	}
 
 	if( isset( $email_from_address ) && isset( $email_from ) )
-		$headers[] = 'From: '. $email_from .' <'. $email_from_address .'>';
+		$headers[] = 'From: '. $email_from_name .' <'. $email_from .'>';
 
 	if( isset( $users_cc_list ))
 		$headers[] = 'Cc: '. $users_cc_list;

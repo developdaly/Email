@@ -106,6 +106,7 @@ function email_add_menu_page_callback() {
 	$email_action	= 'email_action';
 	$email_type		= 'email_type';
 	$email_from		= 'email_from';
+	$email_from_name= 'email_from_name';
 	$email_to		= 'email_to';
 	$email_to_role	= 'email_to_role';
 	$email_cc		= 'email_cc';
@@ -159,9 +160,10 @@ function email_add_menu_page_callback() {
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_from; ?>">From</label></th>
+						<th scope="row"><label for="<?php echo $email_fromPname; ?>">From</label></th>
 						<td>
-							<input type="text" id="<?php echo $email_from; ?>" name="<?php echo $email_from; ?>" style="width: 50%" value="<?php echo $current_user->user_email; ?>" placeholder="The email address to send from">
+							<input type="text" id="<?php echo $email_from_name; ?>" name="<?php echo $email_from_name; ?>" style="width: 25%" value="<?php echo get_bloginfo( 'site_name' ); ?>" placeholder="The name in the From field">
+							<input type="text" id="<?php echo $email_from; ?>" name="<?php echo $email_from; ?>" style="width: 25%" value="<?php echo $current_user->user_email; ?>" placeholder="The email address to send from">
 						</td>
 					</tr>
 
@@ -321,6 +323,7 @@ function email_insert_post() {
 	$email_action 	= (isset($_POST['email_action']) 	? $_POST['email_action'] : '');
 	$email_type 	= (isset($_POST['email_type']) 		? $_POST['email_type'] : '');
 	$email_from 	= (isset($_POST['email_from']) 		? $_POST['email_from'] : '');
+	$email_from_name = (isset($_POST['email_from_name']) ? $_POST['email_from_name'] : '');
 	$email_to 		= (isset($_POST['email_to']) 		? $_POST['email_to'] : '');
 	$email_to_role 	= (isset($_POST['email_to_role']) 	? $_POST['email_to_role'] : '');
 	$email_cc 		= (isset($_POST['email_cc']) 		? $_POST['email_cc'] : '');
@@ -351,7 +354,12 @@ function email_insert_post() {
 		if( empty( $email_message ) ) {
 			$errors[] = '<strong>ERROR</strong>: You must set a <strong>message</strong>.';
 		}
-
+		if( empty( $email_from ) ) {
+			$errors[] = '<strong>ERROR</strong>: You must set a <strong>From email address</strong>.';
+		}
+		if( empty( $email_from_name ) ) {
+			$errors[] = '<strong>ERROR</strong>: You must set a <strong>From name</strong>.';
+		}
 		if( empty( $email_to ) && empty( $email_to_role )) {
 			$errors[] = '<strong>ERROR</strong>: You must set the <strong>To field</strong>.';
 		}
@@ -370,6 +378,10 @@ function email_insert_post() {
 				array(
 					'key' => 'email_from',
 					'value' => $email_from
+				),
+				array(
+					'key' => 'email_from_name',
+					'value' => $email_from_name
 				),
 				array(
 					'key' => 'email_to',
@@ -451,6 +463,14 @@ function email_insert_post() {
 		if ( !empty( $email_type ) ) {
 			update_post_meta( $post_id, 'email_type', $email_type );
 			$success[] = $email_type;
+		}
+		if ( !empty( $email_from ) ) {
+			update_post_meta( $post_id, 'email_from', $email_from );
+			$success[] = $email_from;
+		}
+		if ( !empty( $email_from_name ) ) {
+			update_post_meta( $post_id, 'email_from_name', $email_from_name );
+			$success[] = $email_from_name;
 		}
 		if ( !empty( $email_to ) ) {
 			update_post_meta( $post_id, 'email_to', $email_to );
