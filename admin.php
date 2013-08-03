@@ -201,7 +201,7 @@ function email_add_menu_page_callback() {
 					<tr valign="top">
 						<th scope="row"><label for="<?php echo $email_subject; ?>">Subject</label></th>
 						<td>
-							<input type="text" name="<?php echo $email_subject; ?>" style="width: 50%" value="[[site_title]] [post_title] [action]"> Example: "[My Site] Hello World! updated"
+							<input type="text" name="<?php echo $email_subject; ?>" style="width: 50%" value="[[site_name]] [post_title] [action]"> Example: "[My Site] Hello World! updated"
 						</td>
 					</tr>
 

@@ -4,7 +4,7 @@ function email_template( $action ) {
 
 	if( $action == 'new' ) {
 
-$output = 'A new [post_type] (#[post_id] "[post_title") was created by [post_author]
+$output = 'A new [post_type] (#[post_id] "[post_title]") was created by [post_author]
 This action was taken on [post_date]
 
 [old_status] => [new_status]
@@ -21,15 +21,15 @@ View: [permalink]
 
 --------------------
 
-[site_name] | [site_url] | [admin_url]
+[site_name] | [home_url] | [admin_url]
 ';
 
 	}
 
 	if( $action == 'updated' ) {
 
-$output = 'A [post_type] (#[post_id] "[post_title") was updated by [post_author_modified]
-This action was taken on [post_date]
+$output = 'A [post_type] (#[post_id] "[post_title]") was updated by [post_author_modified]
+This action was taken on [post_modified_date] at [post_modfified_time]
 
 [old_status] => [new_status]
 
@@ -45,7 +45,7 @@ View: [permalink]
 
 --------------------
 
-[site_name] | [site_url] | [admin_url]
+[site_name] | [home_url] | [admin_url]
 ';
 
 	}
