@@ -5,7 +5,7 @@ function email_template( $action ) {
 	if( $action == 'new' ) {
 
 $output = 'A new [post_type] (#[post_id] "[post_title]") was created by [post_author]
-This action was taken on [post_date]
+This action was taken on [post_modified_date] at [post_modified_time]
 
 [old_status] => [new_status]
 
@@ -16,7 +16,7 @@ Title: [post_title]
 Author: [post_author] ([post_author_email])
 
 == Actions ==
-Edit: [edit_post]
+Edit: [edit_post_url]
 View: [permalink]
 
 --------------------
@@ -28,8 +28,8 @@ View: [permalink]
 
 	if( $action == 'updated' ) {
 
-$output = 'A [post_type] (#[post_id] "[post_title]") was updated by [post_author_modified]
-This action was taken on [post_modified_date] at [post_modfified_time]
+$output = 'A [post_type] (#[post_id] "[post_title]") was updated by [post_modified_author]
+This action was taken on [post_modified_date] at [post_modified_time]
 
 [old_status] => [new_status]
 
@@ -40,7 +40,7 @@ Title: [post_title]
 Author: [post_author] ([post_author_email])
 
 == Actions ==
-Edit: [edit_post]
+Edit: [edit_post_url]
 View: [permalink]
 
 --------------------
