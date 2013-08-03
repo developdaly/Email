@@ -132,7 +132,7 @@ function email_add_menu_page_callback() {
 
 			?>
 
-			<p>An <strong>email event</strong> is a set a conditions set below that will trigger an email to be sent.</p>
+			<p>Configure settings here to create the email rules.</p>
 
 			<table class="form-table">
 				<tbody>
