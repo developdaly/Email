@@ -3,7 +3,7 @@
  * Plugin Name: Email
  * Description: Email users with custom templates when certain actions happen, such as new posts, updated custom post types, deleted users.
  * Author: developdaly
- * Version: 0.1
+ * Version: 1.0.1
  * Author URI: http://developdaly.com/
  * Text Domain: email
  *
