@@ -7,7 +7,7 @@ Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Email users with custom templates when certain actions happen, such as new posts, updated custom post types, deleted users.
+Email users with custom templates when certain actions happen, such as new posts or updated custom post types and keep a log of sent emails.
 
 == Description ==
 
@@ -25,21 +25,16 @@ Additionally, you control the email template users receive. Boilterplate templat
 
 See [Installing Plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
 
-== Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
 == Screenshots ==
 
-![Add new email screenshot](http://i.imgur.com/TGDuxJp.png)
+1. Add new email
+2. Email configuration with email template
+3. Email log
 
 == Changelog ==
+
+= 1.0.2 =
+* Improved Readme
 
 = 1.0.1 =
 * Improved Readme
