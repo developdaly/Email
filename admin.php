@@ -80,10 +80,10 @@ function email_add_menu() {
 
 // Load scripts and styles
 function email_enqueue_scripts() {
-	wp_enqueue_style( 'chosen',					plugins_url( '/assets/chosen.css', __FILE__ ) );
+	wp_enqueue_style( 'chosen',					plugins_url( '/assets/chosen/chosen.css', __FILE__ ) );
 	wp_enqueue_style( 'jquery-ui-datepicker',	plugins_url( '/assets/jquery-ui-1.9.2.custom.min.css', __FILE__ ) );
 
-	wp_enqueue_script( 'chosen',				plugins_url( '/assets/jquery.chosen.min.js', __FILE__ ), array( 'jquery' ) );
+	wp_enqueue_script( 'chosen',				plugins_url( '/assets/chosen/chosen.jquery.min.js', __FILE__ ), array( 'jquery' ) );
 	wp_enqueue_script( 'jquery-ui-timepicker',	plugins_url( '/assets/jquery.timepicker.js', __FILE__ ), array( 'jquery', 'jquery-ui-datepicker' ) );
 	wp_enqueue_script( 'app',					plugins_url( '/assets/app.js', __FILE__ ), array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-timepicker' ) );
 }
