@@ -78,6 +78,18 @@ function email_add_menu() {
 	add_submenu_page( 'edit.php?post_type=email', 'Add New', 'Add New', 'update_core', 'email/emails.php', 'email_add_menu_page_callback' );
 }
 
+function email_menu_icon() {
+    ?>
+    <style type="text/css" media="screen">
+        #menu-posts-email .wp-menu-image {
+            background: url('<?php echo plugin_dir_url( __FILE__ ); ?>assets/mail.png') no-repeat 6px -17px !important;
+        }
+        #menu-posts-email:hover .wp-menu-image, #menu-posts-email.wp-has-current-submenu .wp-menu-image {
+            background-position:6px 7px!important;
+        }
+    </style>
+<?php }
+
 // Load scripts and styles
 function email_enqueue_scripts() {
 	wp_enqueue_style( 'chosen',					plugins_url( '/assets/chosen/chosen.css', __FILE__ ) );
