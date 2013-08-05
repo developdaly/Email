@@ -70,6 +70,12 @@ function email_register() {
 
 	register_post_type( 'email_log', $args );
 
+	register_post_status( 'error', array(
+		'label'			=> _x( 'Error', 'email' ),
+		'public'		=> false,
+		'label_count'	=> _n_noop( 'Errors <span class="count">(%s)</span>', 'Errors <span class="count">(%s)</span>' )
+	) );
+
 }
 
 // Add page as submenu to Tools
@@ -139,7 +145,7 @@ function email_add_menu_page_callback() {
 
 			<?php
 
-				$actions = array( 'new', 'updated' );
+				$actions = array( 'new', 'updated', 'deleted' );
 				$types = get_post_types();
 
 			?>

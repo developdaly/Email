@@ -23,14 +23,16 @@ function email_action_router( $new_status, $old_status, $post ) {
 		if( $email_type != $post->post_type )
 			return;
 
-		if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'new' == $new_status ) ) {
-			email_action( 'new', $post->ID, $email->ID );
 		if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'publish' == $new_status ) ) {
 			email_action( 'new', $post->ID, $email->ID, $old_status, $new_status );
 		}
 
-		if ( ($new_status == $old_status) &&  ( $email_action == 'updated' ) ) {
+		elseif ( ($new_status == $old_status) &&  ( $email_action == 'updated' ) ) {
 			email_action( 'updated', $post->ID, $email->ID, $old_status, $new_status );
+		}
+
+		elseif ( ($new_status != $old_status) && ( $email_action == 'deleted' ) && ( 'trash' == $new_status ) ) {
+			email_action( 'deleted', $post->ID, $email->ID, $old_status, $new_status );
 		}
 
 	}
@@ -104,12 +106,27 @@ function email_action( $action, $post_id, $email_id, $old_status, $new_status ) 
 
 	$mail = wp_mail( $users_to_list, $parsed_subject, $parsed_message, $headers );
 
+	// Log successful email
 	if( $mail ) {
 
 		$args = array(
+			'post_content'  => $parsed_message,
+			'post_status'	=> 'private',
 			'post_title'	=> $parsed_subject,
-			'post_type'		=> 'email_log',
-			'post_content'  => $parsed_message
+			'post_type'		=> 'email_log'
+		);
+		$log_id = wp_insert_post( $args );
+
+		foreach( $headers as $key => $val ) {
+			update_post_meta( $log_id, $key, $val );
+		}
+	} else {
+		// Log unsuccessful email
+		$args = array(
+			'post_content'  => $parsed_message,
+			'post_status'	=> 'error',
+			'post_title'	=> '[FAILED to send "'. $action .'" email] '. $parsed_subject,
+			'post_type'		=> 'email_log'
 		);
 		$log_id = wp_insert_post( $args );
 
