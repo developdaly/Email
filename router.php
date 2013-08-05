@@ -21,6 +21,8 @@ function email_action_router( $new_status, $old_status, $post ) {
 
 		if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'new' == $new_status ) ) {
 			email_action( 'new', $post->ID, $email->ID );
+		if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'publish' == $new_status ) ) {
+			email_action( 'new', $post->ID, $email->ID, $old_status, $new_status );
 		}
 
 		if ( ($new_status == $old_status) &&  ( $email_action == 'updated' ) ) {
