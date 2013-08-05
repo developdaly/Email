@@ -18,6 +18,10 @@ function email_action_router( $new_status, $old_status, $post ) {
 		$meta = get_post_meta( $email->ID );
 
 		$email_action = get_post_meta( $email->ID, 'email_action', true );
+		$email_type = get_post_meta( $email->ID, 'email_type', true );
+
+		if( $email_type != $post->post_type )
+			return;
 
 		if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'new' == $new_status ) ) {
 			email_action( 'new', $post->ID, $email->ID );
