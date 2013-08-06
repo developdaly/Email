@@ -14,6 +14,7 @@ Some examples (applies to custom post types as well):
 
 * new post
 * updated post
+* deleted post
 * (more coming soon)
 
 Additionally, you control the email template users receive. Boilterplate templates are included to get you started.
