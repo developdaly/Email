@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Route the email to the right given action.
+ *
+ * @since    1.0.0
+ */
 function email_action_router( $new_status, $old_status, $post ) {
 
 	// Verify the post is not autosaving
@@ -38,6 +43,11 @@ function email_action_router( $new_status, $old_status, $post ) {
 	}
 }
 
+/**
+ * Send the mail.
+ *
+ * @since    1.0.0
+ */
 function email_action( $action, $post_id, $email_id, $old_status, $new_status ) {
 
 	$post = get_post( $post_id );

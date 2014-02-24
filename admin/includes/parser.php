@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Parses an email template and returns the results.
+ *
+ * @since    1.0.0
+ */
 function email_parser( $post_id, $email_id, $old_status, $new_status, $string = '' ) {
 
 	$post = get_post( $post_id );
