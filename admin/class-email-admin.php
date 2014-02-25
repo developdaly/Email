@@ -67,7 +67,7 @@ class Email_Admin {
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_slug . '.php' );
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
 		
-		add_action( 'transition_post_status',		array( $this, 'action_router', 10, 3 ) );
+		add_action( 'transition_post_status',		array( $this, 'action_router' ), 10, 3 );
 		add_action( 'admin_head',					array( $this, 'menu_icon' ) );
 		add_action( 'wp_ajax_email_get_users',		array( $this, 'get_users' ) );
 		add_action( 'wp_ajax_email_get_template',	array( $this, 'get_template' ) );
