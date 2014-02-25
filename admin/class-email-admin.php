@@ -187,214 +187,6 @@ class Email_Admin {
 	<?php }
 
 	/**
-	 * Create the email post.
-	 *
-	 * @since    1.0.0
-	 */
-	public function insert_post() {
-
-		// variables for the field and option names
-		$email_action 	= (isset($_POST['email_action']) 	? $_POST['email_action'] : '');
-		$email_type 	= (isset($_POST['email_type']) 		? $_POST['email_type'] : '');
-		$email_from 	= (isset($_POST['email_from']) 		? $_POST['email_from'] : '');
-		$email_from_name = (isset($_POST['email_from_name']) ? $_POST['email_from_name'] : '');
-		$email_to 		= (isset($_POST['email_to']) 		? $_POST['email_to'] : '');
-		$email_to_role 	= (isset($_POST['email_to_role']) 	? $_POST['email_to_role'] : '');
-		$email_cc 		= (isset($_POST['email_cc']) 		? $_POST['email_cc'] : '');
-		$email_cc_role 	= (isset($_POST['email_cc_role']) 	? $_POST['email_cc_role'] : '');
-		$email_bcc 		= (isset($_POST['email_bcc']) 		? $_POST['email_bcc'] : '');
-		$email_bcc_role = (isset($_POST['email_bcc_role']) 	? $_POST['email_bcc_role'] : '');
-		$email_subject 	= (isset($_POST['email_subject']) 	? $_POST['email_subject'] : '');
-		$email_message 	= (isset($_POST['email_message']) 	? $_POST['email_message'] : '');
-		$email_hidden 	= (isset($_POST['email_hidden']) 	? $_POST['email_hidden'] : '');
-
-		if( isset($email_hidden) && ( $email_hidden == 'Y' ) ) {
-
-			$errors = array();
-			$success = array();
-
-			if( empty( $email_type ) ) {
-				$errors[] = '<strong>ERROR</strong>: You must set a <strong>type</strong>.';
-			}
-
-			if( empty( $email_action ) ) {
-				$errors[] = '<strong>ERROR</strong>: You must set an <strong>action</strong>.';
-			}
-
-			if( empty( $email_subject ) ) {
-				$errors[] = '<strong>ERROR</strong>: You must set a <strong>subject</strong>.';
-			}
-
-			if( empty( $email_message ) ) {
-				$errors[] = '<strong>ERROR</strong>: You must set a <strong>message</strong>.';
-			}
-			if( empty( $email_from ) ) {
-				$errors[] = '<strong>ERROR</strong>: You must set a <strong>From email address</strong>.';
-			}
-			if( empty( $email_from_name ) ) {
-				$errors[] = '<strong>ERROR</strong>: You must set a <strong>From name</strong>.';
-			}
-			if( empty( $email_to ) && empty( $email_to_role )) {
-				$errors[] = '<strong>ERROR</strong>: You must set the <strong>To field</strong>.';
-			}
-
-			$args = array(
-				'post_type' => 'email',
-				'meta_query' => array(
-					array(
-						'key' => 'email_action',
-						'value' => $email_action
-					),
-					array(
-						'key' => 'email_type',
-						'value' => $email_type
-					),
-					array(
-						'key' => 'email_from',
-						'value' => $email_from
-					),
-					array(
-						'key' => 'email_from_name',
-						'value' => $email_from_name
-					),
-					array(
-						'key' => 'email_to',
-						'value' => $email_to
-					),
-					array(
-						'key' => 'email_to_role',
-						'value' => $email_to_role
-					),
-					array(
-						'key' => 'email_cc',
-						'value' => $email_cc
-					),
-					array(
-						'key' => 'email_cc_role',
-						'value' => $email_cc_role
-					),
-					array(
-						'key' => 'email_bcc',
-						'value' => $email_bcc
-					),
-					array(
-						'key' => 'email_bcc_role',
-						'value' => $email_bcc_role
-					),
-					array(
-						'key' => 'email_subject',
-						'value' => $email_subject
-					),
-					array(
-						'key' => 'email_message',
-						'value' => $email_message
-					)
-				)
-			);
-
-			$emails = get_posts( $args );
-
-			if( isset( $emails ) ) {
-
-				if( !empty( $emails ) ) {
-
-					foreach( $emails as $email ) {
-						$errors[] = '<a href="'. get_edit_post_link( $email->ID ) .'">Email configuration</a> already exists.';
-					}
-
-				}
-			}
-
-			if( !empty( $errors ) ) {
-				$output = '<div class="error">';
-				if( $errors ) {
-					$output .= '<ul>';
-					foreach( $errors as $error ) {
-						$output .= '<li>'. $error .'</li>';
-					}
-					$output .= '</ul>';
-				}
-				$output .= '</div>';
-				return $output;
-			}
-
-			$title = $email_type .' > '. $email_action;
-
-			// Create post object
-			$post = array(
-				'post_title'	=> wp_strip_all_tags( $title ),
-				'post_content'	=> $email_message,
-				'post_status'	=> 'publish',
-				'post_type'		=> 'email'
-			);
-
-			// Insert the post into the database
-			$post_id = wp_insert_post( $post );
-			if ( !empty( $email_action ) ) {
-				update_post_meta( $post_id, 'email_action', $email_action );
-				$success[] = $email_action;
-			}
-			if ( !empty( $email_type ) ) {
-				update_post_meta( $post_id, 'email_type', $email_type );
-				$success[] = $email_type;
-			}
-			if ( !empty( $email_from ) ) {
-				update_post_meta( $post_id, 'email_from', $email_from );
-				$success[] = $email_from;
-			}
-			if ( !empty( $email_from_name ) ) {
-				update_post_meta( $post_id, 'email_from_name', $email_from_name );
-				$success[] = $email_from_name;
-			}
-			if ( !empty( $email_to ) ) {
-				update_post_meta( $post_id, 'email_to', $email_to );
-				$success[] = $email_to;
-			}
-			if ( !empty( $email_to_role ) ) {
-				update_post_meta( $post_id, 'email_to_role', $email_to_role );
-				$success[] = $email_to_role;
-			}
-			if ( !empty( $email_cc ) ) {
-				update_post_meta( $post_id, 'email_cc', $email_cc );
-				$success[] = $email_cc;
-			}
-			if ( !empty( $email_cc_role ) ) {
-				update_post_meta( $post_id, 'email_cc_role',	$email_cc_role );
-				$success[] = $email_cc_role;
-			}
-			if ( !empty( $email_bcc ) ) {
-				update_post_meta( $post_id, 'email_bcc', $email_bcc );
-				$success[] = $email_bcc;
-			}
-			if ( !empty( $email_bcc_role ) ) {
-				update_post_meta( $post_id, 'email_bcc_role',$email_bcc_role );
-				$success[] = $email_bcc_role;
-			}
-			if ( !empty( $email_subject ) ) {
-				update_post_meta( $post_id, 'email_subject',	$email_subject );
-				$success[] = $email_subject;
-			}
-
-			$success[] = 'Edit <a href="'. get_edit_post_link( $post_id ) .'">'. get_the_title( $post_id ) .'</a>';
-
-			if( !empty( $post_id ) ) {
-				$output = '<div class="updated">';
-				if( $success ) {
-					$output .= '<ul>';
-					foreach( $success as $item ) {
-						$output .= '<li>'. $item .'</li>';
-					}
-					$output .= '</ul>';
-				}
-				$output .= '</div>';
-				return $output;
-			}
-
-		}
-
-	}
-
-	/**
 	 * Get a commma separated list of users.
 	 *
 	 * @since    1.0.0
@@ -435,6 +227,246 @@ class Email_Admin {
 		echo email_template( $action[0] );
 
 		die();
+	}
+
+	/**
+	 * Send the mail.
+	 *
+	 * @since    1.0.0
+	 */
+	public function email_action( $action, $post_id, $email_id, $old_status, $new_status ) {
+		
+		$post = get_post( $post_id );
+
+		$email_action 		= get_post_meta( $email_id, 'email_action', true );
+		$email_type 		= get_post_meta( $email_id, 'email_type', true );
+		$email_from 		= get_post_meta( $email_id, 'email_from', true );
+		$email_from_name	= get_post_meta( $email_id, 'email_from_name', true );
+		$email_to 			= get_post_meta( $email_id, 'email_to', true );
+		$email_to_role 		= get_post_meta( $email_id, 'email_to_role', true );
+		$email_cc 			= get_post_meta( $email_id, 'email_cc', true );
+		$email_cc_role 		= get_post_meta( $email_id, 'email_cc_role', true );
+		$email_bcc 			= get_post_meta( $email_id, 'email_bcc', true );
+		$email_bcc_role 	= get_post_meta( $email_id, 'email_bcc_role', true );
+		$email_subject 		= get_post_meta( $email_id, 'email_subject', true );
+		$email_message 		= get_post_meta( $email_id, 'email_message', true );
+		$email_hidden 		= get_post_meta( $email_id, 'email_hidden', true );
+
+		// Build the comma separated list of email address for the TO field
+		$users_to_list = '';
+		if( !empty( $email_to_role ) ) {
+			$users_to = get_users( array( 'role' => $email_to_role ) );
+			foreach( $users_to as $user_to ) {
+				$users_to_list .= $user_to->user_email .', ';
+			}
+		}
+		if( !empty( $email_to ) ) {
+			$users_to_list .= $email_to;
+		}
+
+		// Build the comma separated list of email address for the CC field
+		$users_cc_list = '';
+		if( !empty( $email_cc_role ) ) {
+			$users_cc = get_users( array( 'role' => $email_cc_role ) );
+			foreach( $users_cc as $user_cc ) {
+				$users_cc_list .= $user_cc->user_email .', ';
+			}
+		}
+		if( !empty( $email_cc ) ) {
+			$users_cc_list .= $email_cc;
+		}
+
+		// Build the comma separated list of email address for the BCC field
+		$users_bcc_list = '';
+		if( !empty( $email_bcc_role ) ) {
+			$users_bcc = get_users( array( 'role' => $email_bcc_role ) );
+			foreach( $users_bcc as $user_bcc ) {
+				$users_bcc_list .= $user_bcc->user_email .', ';
+			}
+		}
+		if( !empty( $email_bcc ) ) {
+			$users_bcc_list .= $email_bcc;
+		}
+
+		if( isset( $email_from_address ) && isset( $email_from ) )
+			$headers[] = 'From: '. $email_from_name .' <'. $email_from .'>';
+
+		if( isset( $users_cc_list ))
+			$headers[] = 'Cc: '. $users_cc_list;
+
+		if( isset( $users_cc_list ))
+			$headers[] = 'Bcc: '. $users_bcc_list;
+
+		$parsed_message = $this->email_parser( $post_id, $email_id, $old_status, $new_status );
+		$parsed_subject = $this->email_parser( $post_id, $email_id, $old_status, $new_status, $email_subject );
+
+		$mail = wp_mail( $users_to_list, $parsed_subject, $parsed_message, $headers );
+
+		// Log successful email
+		if( $mail ) {
+
+			$args = array(
+				'post_content'  => $parsed_message,
+				'post_status'	=> 'private',
+				'post_title'	=> $parsed_subject,
+				'post_type'		=> 'email_log'
+			);
+			$log_id = wp_insert_post( $args );
+
+			foreach( $headers as $key => $val ) {
+				update_post_meta( $log_id, $key, $val );
+			}
+		} else {
+			// Log unsuccessful email
+			$args = array(
+				'post_content'  => $parsed_message,
+				'post_status'	=> 'error',
+				'post_title'	=> '[FAILED to send "'. $action .'" email] '. $parsed_subject,
+				'post_type'		=> 'email_log'
+			);
+			$log_id = wp_insert_post( $args );
+
+			foreach( $headers as $key => $val ) {
+				update_post_meta( $log_id, $key, $val );
+			}
+		}
+
+		return $mail;
+
+	}
+
+	/**
+	 * Route the email to the right given action.
+	 *
+	 * @since    1.0.0
+	 */
+	public function action_router( $new_status, $old_status, $post ) {
+
+		// Verify the post is not autosaving
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return;
+
+		// Verify the post is not a revision
+		if ( wp_is_post_revision( $post ) )
+			return;
+		
+		// Get all emails and loop through each one to see if the meta matches
+		// If there's a meta match, fire the action
+		$emails = get_posts( array( 'post_type' => 'email', 'posts_per_page' => -1 ) );
+		
+		foreach( $emails as $email ) {			
+
+			$meta = get_post_meta( $email->ID );
+
+			$email_action = get_post_meta( $email->ID, 'email_action', true );
+			$email_type = get_post_meta( $email->ID, 'email_type', true );
+
+			if( $email_type != $post->post_type )
+				continue;
+
+			if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'publish' == $new_status ) ) {
+				error_log( 'new' );
+				$this->email_action( 'new', $post->ID, $email->ID, $old_status, $new_status );
+			}
+
+			elseif ( ($new_status == $old_status) &&  ( $email_action == 'updated' ) ) {
+				$this->email_action( 'updated', $post->ID, $email->ID, $old_status, $new_status );
+			}
+
+			elseif ( ($new_status != $old_status) && ( $email_action == 'deleted' ) && ( 'trash' == $new_status ) ) {
+				$this->email_action( 'deleted', $post->ID, $email->ID, $old_status, $new_status );
+			}
+
+		}
+	}
+	
+	/**
+	 * Parses an email template and returns the results.
+	 *
+	 * @since    1.0.0
+	 */
+	public function email_parser( $post_id, $email_id, $old_status, $new_status, $string = '' ) {
+		
+		$post = get_post( $post_id );
+		$email = get_post( $email_id );
+
+		if( $string ) {
+			$parse = $string;
+		} else {
+			$parse = $email->post_content;
+		}
+
+		$search = array(
+
+			// Site Information
+			'[site_name]',
+			'[site_description]',
+			'[home_url]',
+			'[admin_email]',
+			'[admin_url]',
+
+			// Post
+			'[post_id]',
+			'[post_type]',
+			'[post_author]',
+			'[post_author_email]',
+			'[post_date]',
+			'[post_time]',
+			'[post_modified_author]',
+			'[post_modified_date]',
+			'[post_modified_time]',
+			'[post_title]',
+			'[permalink]',
+			'[old_status]',
+			'[new_status]',
+			'[edit_post_url]',
+
+			// Post meta
+			'[action]',
+			'[to_emails]',
+			'[from_email]',
+			'[from_name]',
+			'[cc_emails]',
+			'[bcc_emails]'
+
+		);
+		$replace = array(
+
+			// Site Information
+			get_bloginfo( 'name' ),
+			get_bloginfo( 'description' ),
+			get_bloginfo( 'url' ),
+			get_bloginfo( 'admin_email' ),
+			get_admin_url(),
+
+			// Post
+			$post_id,
+			get_post_type( $post_id ),
+			get_the_author_meta( 'display_name', $post->post_author ),
+			get_the_author_meta( 'email', $post->post_author ),
+			get_the_date( '', $post_id ),
+			get_the_time( '', $post_id ),
+			get_the_modified_author(  $post_id ),
+			get_the_modified_date( '', $post_id ),
+			get_the_modified_time( '', $post_id ),
+			get_the_title( $post_id ),
+			get_permalink( $post_id ),
+			$old_status,
+			$new_status,
+			get_edit_post_link( $post_id )		,
+
+			// Post meta
+			get_post_meta( $post_id, 'email_action', true ),
+			get_post_meta( $post_id, 'to_emails', true ),
+			get_post_meta( $post_id, 'from_email', true ),
+			get_post_meta( $post_id, 'from_name', true ),
+			get_post_meta( $post_id, 'cc_emails', true ),
+			get_post_meta( $post_id, 'bcc_emails', true )
+		);
+
+		$parsed = str_replace( $search, $replace, $parse );
+
+		return $parsed;
 	}
 	
 }

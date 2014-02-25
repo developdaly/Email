@@ -37,8 +37,6 @@ if ( ! defined( 'WPINC' ) ) {
  */
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-email.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'admin/views/templates.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'admin/includes/router.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'admin/includes/parser.php' );
 
 /*
  * Register hooks that are fired when the plugin is activated or deactivated.
