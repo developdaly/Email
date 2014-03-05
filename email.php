@@ -29,34 +29,19 @@ if ( ! defined( 'WPINC' ) ) {
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
 
-/*
- * @TODO:
- *
- * - replace `class-email.php` with the name of the plugin's class file
- *
- */
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-email.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'admin/views/templates.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'public/class-email-subscriptions.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'public/includes/shortcodes.php' );
 
 /*
  * Register hooks that are fired when the plugin is activated or deactivated.
  * When the plugin is deleted, the uninstall.php file is loaded.
- *
- * @TODO:
- *
- * - replace Email with the name of the class defined in
- *   `class-email.php`
  */
 register_activation_hook( __FILE__, array( 'Email', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Email', 'deactivate' ) );
 
-/*
- * @TODO:
- *
- * - replace Email with the name of the class defined in
- *   `class-email.php`
- */
 add_action( 'plugins_loaded', array( 'Email', 'get_instance' ) );
+add_action( 'plugins_loaded', array( 'Email_Subscriptions', 'get_instance' ) );
 
 /*----------------------------------------------------------------------------*
  * Dashboard and Administrative Functionality
@@ -65,6 +50,7 @@ add_action( 'plugins_loaded', array( 'Email', 'get_instance' ) );
 if ( is_admin() ) {
 
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-email-admin.php' );
+	require_once( plugin_dir_path( __FILE__ ) . 'admin/views/templates.php' );
 	add_action( 'plugins_loaded', array( 'Email_Admin', 'get_instance' ) );
 
 }

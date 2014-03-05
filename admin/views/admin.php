@@ -297,6 +297,7 @@
 							<select id="<?php echo $email_to_role; ?>" name="<?php echo $email_to_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
+								<option value="subscribed">Subscribed</option>
 							</select>
 							<input type="text" id="<?php echo $email_to; ?>" name="<?php echo $email_to; ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
@@ -308,6 +309,7 @@
 							<select id="<?php echo $email_cc_role; ?>" name="<?php echo $email_cc_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
+								<option value="subscribed">Subscribed</option>
 							</select>
 							<input type="text" id="<?php echo $email_cc; ?>" name="<?php echo $email_cc; ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
@@ -319,6 +321,7 @@
 							<select id="<?php echo $email_bcc_role; ?>" name="<?php echo $email_bcc_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
+								<option value="subscribed">Subscribed</option>
 							</select>
 							<input type="text" id="<?php echo $email_bcc; ?>" name="<?php echo $email_bcc; ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>

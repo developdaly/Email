@@ -5,7 +5,7 @@
  * @package   Email_Admin
  * @author    Patrick Daly <patrick@developdaly.com>
  * @license   GPL-2.0+
- * @link      http://example.com
+ * @link      http://wordpress.org/plugins/email/
  * @copyright 2014 Patrick Daly
  */
 
@@ -15,8 +15,6 @@
  *
  * If you're interested in introducing public-facing
  * functionality, then refer to `class-email.php`
- *
- * @TODO: Rename this class to a proper name for your plugin.
  *
  * @package Email_Admin
  * @author  Patrick Daly <patrick@developdaly.com>
@@ -263,6 +261,18 @@ class Email_Admin {
 		if( !empty( $email_to ) ) {
 			$users_to_list .= $email_to;
 		}
+		
+		if( $email_to == '[subscribed]' ) {
+			$users_to_list = self::email_get_subscribed( $post_id );
+		}
+		
+		if( $email_cc == '[subscribed]' ) {
+			$users_cc_list = self::email_get_subscribed( $post_id );
+		}
+		
+		if( $email_bcc == '[subscribed]' ) {
+			$users_bcc_list = self::email_get_subscribed( $post_id );
+		}
 
 		// Build the comma separated list of email address for the CC field
 		$users_cc_list = '';
@@ -352,10 +362,10 @@ class Email_Admin {
 		
 		// Get all emails and loop through each one to see if the meta matches
 		// If there's a meta match, fire the action
-		$emails = get_posts( array( 'post_type' => 'email', 'posts_per_page' => -1 ) );
-		
-		foreach( $emails as $email ) {			
+		$emails = get_posts( array( 'post_type' => 'email', 'posts_per_page' => -1 ) );		
 
+		foreach( $emails as $email ) {
+			
 			$meta = get_post_meta( $email->ID );
 
 			$email_action = get_post_meta( $email->ID, 'email_action', true );
@@ -365,7 +375,6 @@ class Email_Admin {
 				continue;
 
 			if ( ($new_status != $old_status) && ( $email_action == 'new' ) && ( 'publish' == $new_status ) ) {
-				error_log( 'new' );
 				$this->email_action( 'new', $post->ID, $email->ID, $old_status, $new_status );
 			}
 
@@ -416,6 +425,7 @@ class Email_Admin {
 			'[post_modified_date]',
 			'[post_modified_time]',
 			'[post_title]',
+			'[post_content]',
 			'[permalink]',
 			'[old_status]',
 			'[new_status]',
@@ -427,7 +437,8 @@ class Email_Admin {
 			'[from_email]',
 			'[from_name]',
 			'[cc_emails]',
-			'[bcc_emails]'
+			'[bcc_emails]',
+			'[subscribed]'
 
 		);
 		$replace = array(
@@ -450,10 +461,11 @@ class Email_Admin {
 			get_the_modified_date( '', $post_id ),
 			get_the_modified_time( '', $post_id ),
 			get_the_title( $post_id ),
+			get_post_field( 'post_content', $post_id ),
 			get_permalink( $post_id ),
 			$old_status,
 			$new_status,
-			get_edit_post_link( $post_id )		,
+			get_edit_post_link( $post_id ),
 
 			// Post meta
 			get_post_meta( $post_id, 'email_action', true ),
@@ -461,12 +473,33 @@ class Email_Admin {
 			get_post_meta( $post_id, 'from_email', true ),
 			get_post_meta( $post_id, 'from_name', true ),
 			get_post_meta( $post_id, 'cc_emails', true ),
-			get_post_meta( $post_id, 'bcc_emails', true )
+			get_post_meta( $post_id, 'bcc_emails', true ),
+			$this->email_get_subscribed( $post_id )
 		);
 
 		$parsed = str_replace( $search, $replace, $parse );
 
 		return $parsed;
+	}
+	
+	public function email_get_subscribed( $post_id ) {
+		
+		$output = array();
+		
+		$subscribers = get_post_meta( $post_id, '_email_subscribers' );
+		
+		// check if the custom field has a value
+		if( ! empty( $subscribers[0] ) ) {
+			foreach( $subscribers[0] as $subscriber ) {
+				$output[] = $subscriber['email_address'];
+			}
+			$output = implode(', ', $output);
+		} else {
+			$output = '';
+		}
+		
+		return $output;
+	
 	}
 	
 }
