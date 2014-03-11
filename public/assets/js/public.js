@@ -25,6 +25,12 @@
 			.done(function( response ) {
 				if ( response ) {
 					try {
+						
+						$('.task-subscribers ul').append(function () {
+							var output = '<li><a href="' + response.post.guid + '">' + response.post.post_title + '</a></li>';
+							return output;
+						});
+
 						resetForm($(data));
 					} catch ( err ) {
 
@@ -35,12 +41,6 @@
 
 			})
 			.always(function( response ) {
-				
-				console.log(data);
-				
-				console.log(event);
-				
-				console.log(response);
 
 				if( triggerType ) {
 					$.event.trigger({
