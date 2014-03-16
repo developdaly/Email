@@ -1,24 +1,26 @@
 <?php if( is_user_logged_in() ) { ?>
 
-<form class="email-add-subscriber form-horizontal" role="form" method="post">
+<form class="email-subscribe" role="form" method="post">
+	
+	<div class="email-add-subscriber-title">Subscribers</div>
 
 	<div class="form-group">
-		<label class="control-label col-sm-2" for="email-subscriber-address">Email Address</label>
-		<div class="control-input col-sm-10">
-			<input type="text" class="form-control" id="email-subscriber-addressr" name="email-subscriber-address" placeholder="Email address...">
+		<label class="control-label" for="email-subscriber-address">Email Address</label>
+		<div class="control-input">
+			<input type="text" class="form-control" id="email-subscriber-address" name="email-subscriber-address" placeholder="Email address...">
 		</div>
 	</div>
 
 	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-10">
+		<div class="control-input control-submit">
 			<button type="submit" class="btn">Subscribe</button>
 		</div>
 	</div>
 
 	<input type="hidden" name="action" value="email_subscriptions">
-	<input type="hidden" name="controller" value="email_add_subscriber">
+	<input type="hidden" name="controller" value="email_subscribe">
 	<input type="hidden" name="post-id" value="<?php the_ID(); ?>">
-	<input type="hidden" name="security" value="<?php echo wp_create_nonce( 'email_add_subscriber' ); ?>">
+	<input type="hidden" name="security" value="<?php echo wp_create_nonce( 'email_subscribe' ); ?>">
 
 </form>
 
@@ -26,14 +28,27 @@
 $subscribers = get_post_meta( get_the_ID(), '_email_subscribers' );
 // check if the custom field has a value
 if( ! empty( $subscribers[0] ) ) { ?>
-<div class="task-subscribers">
-	<ul>
-	<?php foreach( $subscribers[0] as $subscriber ) { ?>
-		<li><a href="mailto:<?php echo $subscriber['email_address']; ?>"><?php echo $subscriber['email_address']; ?></a></li>
-	<?php } ?>
-	</ul>
-</div>
-							   
+<form class="email-unsubscribe" role="form" method="post">
+	<div class="task-subscribers">
+		<ul>
+		<?php foreach( $subscribers[0] as $subscriber ) { ?>
+			<li>
+				<input type="checkbox" name="email_addresses[]" value="<?php echo $subscriber['email_address']; ?>">
+				<a href="mailto:<?php echo $subscriber['email_address']; ?>"><?php echo $subscriber['email_address']; ?></a>
+			</li>
+		<?php } ?>
+		</ul>
+	</div>
+	
+	<input type="submit" class="btn" value="Unsubscribe selected">
+	
+	<input type="hidden" name="action" value="email_subscriptions">
+	<input type="hidden" name="controller" value="email_unsubscribe">
+	<input type="hidden" name="post-id" value="<?php the_ID(); ?>">
+	<input type="hidden" name="security" value="<?php echo wp_create_nonce( 'email_unsubscribe' ); ?>">
+	
+</form>
+
 <?php } ?>
 
 <?php } else { ?>
@@ -41,7 +56,7 @@ if( ! empty( $subscribers[0] ) ) { ?>
 <div class="alert alert-warning">
 
 	You must be logged in to subscribe.
-	
+
 </div>
 
 <?php } ?>

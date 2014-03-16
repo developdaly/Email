@@ -96,13 +96,16 @@ class Email_Subscriptions {
 	 * @since    0.1.0
 	 */
 	public function go() {
-		
+					
 		if ( !empty( $_POST ) || ( defined('DOING_AJAX') && DOING_AJAX ) ) {
-			
+
 			if( isset( $_POST['action'] ) && $_POST['action'] == 'email_subscriptions' ) {
 
-				if( $_POST['controller'] == 'email_add_subscriber' ) {
+				if( $_POST['controller'] == 'email_subscribe' ) {
 					$result = self::add_subscriber($_POST);
+				}
+				if( $_POST['controller'] == 'email_unsubscribe' ) {
+					$result = self::unsubscribe($_POST);
 				}
 				// If this is an ajax request
 				if ( defined('DOING_AJAX') && DOING_AJAX ) {
@@ -186,7 +189,6 @@ class Email_Subscriptions {
 			$updated = update_post_meta( $post_id, '_email_subscribers', $value );
 			
 		} else {
-			
 			$output = 'The post ID or email address were not provided';
 			return $output;
 		}
@@ -195,11 +197,13 @@ class Email_Subscriptions {
 		if ( $updated != false ) {
 
 			$post = get_post( $post_id );
+			$subscribers = get_post_meta( $post_id, '_email_subscribers', true );
 
 			$output = array(
-				'status'	=> 'success',
-				'message'	=> __('Success!'),
-				'post'		=> $post
+				'status'		=> 'success',
+				'message'		=> __('Success!'),
+				'post'			=> $post,
+				'subscribers'	=> $subscribers
 			);
 
 		} else {
@@ -208,5 +212,86 @@ class Email_Subscriptions {
 
 		return $output;
 	}
-	
+
+	/**
+	 * Inserts a new subscription.
+	 *
+	 * @since    2.0.0
+	 */
+
+	public function unsubscribe( $data ) {
+		if( empty( $data ) ) {
+			return;
+		}
+
+		// If the current user can't publish posts stop
+		if ( !current_user_can('read') ) {
+			$output = 'You don\'t have proper permissions to subscibe. :(';
+			return $output;
+		}
+
+		if( isset( $data['email_addresses'] ) ) {
+			$email_addresses = $data['email_addresses'];
+		} else {
+			$email_addresses = false;
+		}
+		if( isset( $data['post-id'] ) ) {
+			$post_id = $data['post-id'];
+		} else {
+			$post_id = false;
+		}
+
+		if( $post_id && $email_addresses ) {
+
+			$subscribers = get_post_meta( $post_id, '_email_subscribers', true );
+
+			foreach( $email_addresses as $email_address ) {
+				$key = array_searchRecursive( $email_address, $subscribers );
+				unset($subscribers[$key[0]]);
+			}
+			
+			$updated = update_post_meta( $post_id, '_email_subscribers', $subscribers );
+			
+		} else {
+			$output = 'The post ID or email address were not provided';
+			return $output;
+		}
+
+		// If the task inserted succesffully
+		if ( $updated != false ) {
+
+			$post = get_post( $post_id );
+			$subscribers = get_post_meta( $post_id, '_email_subscribers', true );
+
+			$output = array(
+				'status'		=> 'success',
+				'message'		=> __('Success!'),
+				'post'			=> $post,
+				'subscribers'	=> $subscribers
+			);
+
+		} else {
+			$output = 'There was an error while unsubscribing that email address. Please refresh the page and try again.';
+		}
+
+		return $output;
+	}
+}
+
+function array_searchRecursive( $needle, $haystack, $strict=false, $path=array() )
+{
+    if( !is_array($haystack) ) {
+        return false;
+    }
+ 
+    foreach( $haystack as $key => $val ) {
+        if( is_array($val) && $subPath = array_searchRecursive($needle, $val, $strict, $path) ) {
+            $path = array_merge($path, array($key), $subPath);
+            return $path;
+        } elseif( (!$strict && $val == $needle) || ($strict && $val === $needle) ) {
+            $path[] = $key;
+            return $path;
+        }
+    }
+    return false;
 }
