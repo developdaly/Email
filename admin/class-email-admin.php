@@ -395,7 +395,7 @@ class Email_Admin {
 	 * @since    1.0.0
 	 */
 	public function email_parser( $post_id, $email_id, $old_status, $new_status, $string = '' ) {
-		
+
 		$post = get_post( $post_id );
 		$email = get_post( $email_id );
 
@@ -404,7 +404,14 @@ class Email_Admin {
 		} else {
 			$parse = $email->post_content;
 		}
-
+		
+		$date_format = get_option('date_format');
+		$time_format = get_option('time_format');
+		$gmt = get_option('gmt_offset');
+		
+		$last_modified_author_id = get_post_meta($post->ID, '_edit_last', true );
+		$last_modified_author_display_name = get_the_author_meta( 'display_name', $last_modified_author_id );
+		
 		$search = array(
 
 			// Site Information
@@ -454,12 +461,12 @@ class Email_Admin {
 			$post_id,
 			get_post_type( $post_id ),
 			get_the_author_meta( 'display_name', $post->post_author ),
-			get_the_author_meta( 'email', $post->post_author ),
-			get_the_date( '', $post_id ),
-			get_the_time( '', $post_id ),
-			get_the_modified_author(  $post_id ),
-			get_the_modified_date( '', $post_id ),
-			get_the_modified_time( '', $post_id ),
+			get_the_author_meta( 'user_email', $post->post_author ),
+			get_post_time( $date_format, $gmt, $post_id ),
+			get_post_time( $time_format, $gmt, $post_id ),
+			$last_modified_author_display_name,
+			get_post_modified_time( $date_format, $gmt, $post_id ),
+			get_post_modified_time( $time_format, $gmt, $post_id ),
 			get_the_title( $post_id ),
 			get_post_field( 'post_content', $post_id ),
 			get_permalink( $post_id ),
