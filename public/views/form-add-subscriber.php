@@ -53,7 +53,7 @@ if( ! empty( $subscribers[0] ) ) { ?>
 
 <?php } else { ?>
 
-<div class="alert alert-warning">
+<div class="alert alert-warning alert-login-required">
 
 	You must be logged in to subscribe.
 
