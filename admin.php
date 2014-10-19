@@ -121,20 +121,20 @@ function email_add_menu_page_callback() {
 	$send_options = get_option( 'email_settings' );
 
 	// variables for the field and option names
-	$email_action	= 'email_action';
-	$email_type		= 'email_type';
-	$email_from		= 'email_from';
-	$email_from_name= 'email_from_name';
-	$email_to		= 'email_to';
-	$email_to_role	= 'email_to_role';
-	$email_cc		= 'email_cc';
-	$email_cc_role	= 'email_cc_role';
-	$email_bcc		= 'email_bcc';
-	$email_bcc_role	= 'email_bcc_role';
-	$email_subject	= 'email_subject';
-	$email_message	= 'email_message';
-	$email_hidden	= 'email_hidden';
-
+	$email_action			= 'email_action';
+	$email_type				= 'email_type';
+	$email_from				= 'email_from';
+	$email_from_name		= 'email_from_name';
+	$email_to				= 'email_to';
+	$email_to_role			= 'email_to_role';
+	$email_cc				= 'email_cc';
+	$email_cc_role			= 'email_cc_role';
+	$email_bcc				= 'email_bcc';
+	$email_bcc_role			= 'email_bcc_role';
+	$email_subject			= 'email_subject';
+	$email_message			= 'email_message';
+	$email_hidden			= 'email_hidden';
+	$email_html_formatted 	= 'email_html_formatted';
 	?>
 
 	<div class="wrap">
@@ -236,6 +236,13 @@ function email_add_menu_page_callback() {
 					</tr>
 
 					<tr valign="top">
+						<th scope="row"><label for="<?php echo $email_html_formatted; ?>">HTML Formatted Email?</label></th>
+						<td>
+							<input type="checkbox" name="<?php echo $email_html_formatted; ?>" value="false">
+						</td>
+					</tr>
+
+					<tr valign="top">
 						<th scope="row"></th>
 						<td>
 							<input type="hidden" name="<?php echo $email_hidden; ?>" value="Y">
@@ -327,6 +334,12 @@ function email_add_menu_page_callback() {
 			<dt><code>[post_modified_date]</code></dt>
 			<dd>The date the post was modified. This is the timestamp of current action.</dd>
 
+			<dt><code>[post_title]</code></dt>
+			<dd>The title of the post.</dd>
+
+			<dt><code>[post_content]</code></dt>
+			<dd>The content of the post.  This will likely be in HTML format, so make sure to set your format accordingly.</dd>
+
 		</dl>
 
 	</div>
@@ -338,19 +351,20 @@ function email_add_menu_page_callback() {
 function email_insert_post() {
 
 	// variables for the field and option names
-	$email_action 	= (isset($_POST['email_action']) 	? $_POST['email_action'] : '');
-	$email_type 	= (isset($_POST['email_type']) 		? $_POST['email_type'] : '');
-	$email_from 	= (isset($_POST['email_from']) 		? $_POST['email_from'] : '');
-	$email_from_name = (isset($_POST['email_from_name']) ? $_POST['email_from_name'] : '');
-	$email_to 		= (isset($_POST['email_to']) 		? $_POST['email_to'] : '');
-	$email_to_role 	= (isset($_POST['email_to_role']) 	? $_POST['email_to_role'] : '');
-	$email_cc 		= (isset($_POST['email_cc']) 		? $_POST['email_cc'] : '');
-	$email_cc_role 	= (isset($_POST['email_cc_role']) 	? $_POST['email_cc_role'] : '');
-	$email_bcc 		= (isset($_POST['email_bcc']) 		? $_POST['email_bcc'] : '');
-	$email_bcc_role = (isset($_POST['email_bcc_role']) 	? $_POST['email_bcc_role'] : '');
-	$email_subject 	= (isset($_POST['email_subject']) 	? $_POST['email_subject'] : '');
-	$email_message 	= (isset($_POST['email_message']) 	? $_POST['email_message'] : '');
-	$email_hidden 	= (isset($_POST['email_hidden']) 	? $_POST['email_hidden'] : '');
+	$email_action 			= (isset($_POST['email_action']) 	? $_POST['email_action'] : '');
+	$email_type 			= (isset($_POST['email_type']) 		? $_POST['email_type'] : '');
+	$email_from 			= (isset($_POST['email_from']) 		? $_POST['email_from'] : '');
+	$email_from_name		= (isset($_POST['email_from_name']) ? $_POST['email_from_name'] : '');
+	$email_to 				= (isset($_POST['email_to']) 		? $_POST['email_to'] : '');
+	$email_to_role 			= (isset($_POST['email_to_role']) 	? $_POST['email_to_role'] : '');
+	$email_cc 				= (isset($_POST['email_cc']) 		? $_POST['email_cc'] : '');
+	$email_cc_role 			= (isset($_POST['email_cc_role']) 	? $_POST['email_cc_role'] : '');
+	$email_bcc 				= (isset($_POST['email_bcc']) 		? $_POST['email_bcc'] : '');
+	$email_bcc_role 		= (isset($_POST['email_bcc_role']) 	? $_POST['email_bcc_role'] : '');
+	$email_subject 			= (isset($_POST['email_subject']) 	? $_POST['email_subject'] : '');
+	$email_message 			= (isset($_POST['email_message']) 	? $_POST['email_message'] : '');
+	$email_hidden 			= (isset($_POST['email_hidden']) 	? $_POST['email_hidden'] : '');
+	$email_html_formatted 	= (isset($_POST['email_html_formatted']) 	? $_POST['email_html_formatted'] : '');
 
 	if( isset($email_hidden) && ( $email_hidden == 'Y' ) ) {
 
@@ -432,6 +446,10 @@ function email_insert_post() {
 				array(
 					'key' => 'email_message',
 					'value' => $email_message
+				),
+				array(
+					'key' => 'email_html_formatted',
+					'value' => $email_html_formatted
 				)
 			)
 		);
@@ -511,13 +529,16 @@ function email_insert_post() {
 			$success[] = $email_bcc;
 		}
 		if ( !empty( $email_bcc_role ) ) {
-			update_post_meta( $post_id, 'email_bcc_role',$email_bcc_role );
+			update_post_meta( $post_id, 'email_bcc_role', $email_bcc_role );
 			$success[] = $email_bcc_role;
 		}
 		if ( !empty( $email_subject ) ) {
 			update_post_meta( $post_id, 'email_subject',	$email_subject );
 			$success[] = $email_subject;
 		}
+
+		update_post_meta( $post_id, 'email_html_formatted',	$email_html_formatted );
+		$success[] = $email_html_formatted;
 
 		$success[] = 'Edit <a href="'. get_edit_post_link( $post_id ) .'">'. get_the_title( $post_id ) .'</a>';
 

@@ -38,23 +38,28 @@ function email_action_router( $new_status, $old_status, $post ) {
 	}
 }
 
+function set_html_content_type() {
+	return 'text/html';
+}
+
 function email_action( $action, $post_id, $email_id, $old_status, $new_status ) {
 
 	$post = get_post( $post_id );
 
-	$email_action 		= get_post_meta( $email_id, 'email_action', true );
-	$email_type 		= get_post_meta( $email_id, 'email_type', true );
-	$email_from 		= get_post_meta( $email_id, 'email_from', true );
-	$email_from_name	= get_post_meta( $email_id, 'email_from_name', true );
-	$email_to 			= get_post_meta( $email_id, 'email_to', true );
-	$email_to_role 		= get_post_meta( $email_id, 'email_to_role', true );
-	$email_cc 			= get_post_meta( $email_id, 'email_cc', true );
-	$email_cc_role 		= get_post_meta( $email_id, 'email_cc_role', true );
-	$email_bcc 			= get_post_meta( $email_id, 'email_bcc', true );
-	$email_bcc_role 	= get_post_meta( $email_id, 'email_bcc_role', true );
-	$email_subject 		= get_post_meta( $email_id, 'email_subject', true );
-	$email_message 		= get_post_meta( $email_id, 'email_message', true );
-	$email_hidden 		= get_post_meta( $email_id, 'email_hidden', true );
+	$email_action 			= get_post_meta( $email_id, 'email_action', true );
+	$email_type 			= get_post_meta( $email_id, 'email_type', true );
+	$email_from 			= get_post_meta( $email_id, 'email_from', true );
+	$email_from_name		= get_post_meta( $email_id, 'email_from_name', true );
+	$email_to 				= get_post_meta( $email_id, 'email_to', true );
+	$email_to_role 			= get_post_meta( $email_id, 'email_to_role', true );
+	$email_cc 				= get_post_meta( $email_id, 'email_cc', true );
+	$email_cc_role 			= get_post_meta( $email_id, 'email_cc_role', true );
+	$email_bcc 				= get_post_meta( $email_id, 'email_bcc', true );
+	$email_bcc_role 		= get_post_meta( $email_id, 'email_bcc_role', true );
+	$email_subject 			= get_post_meta( $email_id, 'email_subject', true );
+	$email_message 			= get_post_meta( $email_id, 'email_message', true );
+	$email_hidden 			= get_post_meta( $email_id, 'email_hidden', true );
+	$email_html_formatted	= get_post_meta( $email_id, 'email_html_formatted', true ) === 'true'? true: false;
 
 	// Build the comma separated list of email address for the TO field
 	$users_to_list = '';
@@ -104,7 +109,15 @@ function email_action( $action, $post_id, $email_id, $old_status, $new_status ) 
 	$parsed_message = email_parser( $post_id, $email_id, $old_status, $new_status );
 	$parsed_subject = email_parser( $post_id, $email_id, $old_status, $new_status, $email_subject );
 
+	if ( $email_html_formatted )
+		add_filter( 'wp_mail_content_type', 'set_html_content_type' );
+	
 	$mail = wp_mail( $users_to_list, $parsed_subject, $parsed_message, $headers );
+	
+	
+	if ( $email_html_formatted )
+		// Reset content-type to avoid conflicts -- http://core.trac.wordpress.org/ticket/23578
+		remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
 
 	// Log successful email
 	if( $mail ) {
