@@ -3,7 +3,7 @@ Contributors: developdaly
 Tags: email,  e-mail, wp-email, mail, wp_mail, send, email log
 Requires at least: 3.5.2
 Tested up to: 3.6
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
