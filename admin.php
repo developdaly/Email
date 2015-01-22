@@ -156,77 +156,77 @@ function email_add_menu_page_callback() {
 				<tbody>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_type; ?>">Post Type</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_type ); ?>">Post Type</label></th>
 						<td>
-							<select id="<?php echo $email_type; ?>" name="<?php echo $email_type; ?>" class="chosen-select" multiple="multiple" data-placeholder="Choose post types..." style="width: 50%">
+							<select id="<?php echo esc_attr( $email_type ); ?>" name="<?php echo esc_attr( $email_type ); ?>" class="chosen-select" multiple="multiple" data-placeholder="Choose post types..." style="width: 50%">
 								<?php foreach( $types as $key => $value ) {
-									echo '<option val="'. $key .'">'. $value .'</option>';
+									echo '<option val="'. esc_attr( $key ) .'">'. esc_html( $value ) .'</option>';
 								}; ?>
 							</select>
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_action; ?>">Action</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_action ); ?>">Action</label></th>
 						<td>
-							<select id="<?php echo $email_action; ?>" name="<?php echo $email_action; ?>" class="chosen-select" multiple="multiple" data-placeholder="Choose actions..." style="width: 50%">
+							<select id="<?php echo esc_attr( $email_action ); ?>" name="<?php echo esc_attr( $email_action ); ?>" class="chosen-select" multiple="multiple" data-placeholder="Choose actions..." style="width: 50%">
 								<?php foreach( $actions as $key => $value ) {
-									echo '<option val="'. $key .'">'. $value .'</option>';
+									echo '<option val="'. esc_attr( $key ) .'">'. esc_html( $value ) .'</option>';
 								}; ?>
 							</select>
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_fromPname; ?>">From</label></th>
-						<td>
-							<input type="text" id="<?php echo $email_from_name; ?>" name="<?php echo $email_from_name; ?>" style="width: 25%" value="<?php echo get_bloginfo( 'site_name' ); ?>" placeholder="The name in the From field">
-							<input type="text" id="<?php echo $email_from; ?>" name="<?php echo $email_from; ?>" style="width: 25%" value="<?php echo $current_user->user_email; ?>" placeholder="The email address to send from">
+						<th scope="row"><label for="<?php echo esc_attr( $email_fromPname ); ?>">From</label></th>
+						<td>this should be secure
+							<input type="text" id="<?php echo esc_attr( $email_from_name ); ?>" name="<?php echo esc_attr( $email_from_name ); ?>" style="width: 25%" value="<?php echo esc_attr( get_bloginfo( 'site_name' ) ); ?>" placeholder="The name in the From field">
+							<input type="text" id="<?php echo esc_attr( $email_from ); ?>" name="<?php echo esc_attr( $email_from ); ?>" style="width: 25%" value="<?php echo esc_attr( $current_user->user_email ); ?>" placeholder="The email address to send from">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_to_role; ?>">To</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_to_role ); ?>">To</label></th>
 						<td>
-							<select id="<?php echo $email_to_role; ?>" name="<?php echo $email_to_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+							<select id="<?php echo esc_attr( $email_to_role ); ?>" name="<?php echo esc_attr( $email_to_role ); ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
-							<input type="text" id="<?php echo $email_to; ?>" name="<?php echo $email_to; ?>" style="width: 70%" placeholder="Additional email addresses">
+							<input type="text" id="<?php echo esc_attr( $email_to ); ?>" name="<?php echo esc_attr( $email_to ); ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_cc_role; ?>">CC</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_cc_role ); ?>">CC</label></th>
 						<td>
-							<select id="<?php echo $email_cc_role; ?>" name="<?php echo $email_cc_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+							<select id="<?php echo esc_attr( $email_cc_role ); ?>" name="<?php echo esc_attr( $email_cc_role ); ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
-							<input type="text" id="<?php echo $email_cc; ?>" name="<?php echo $email_cc; ?>" style="width: 70%" placeholder="Additional email addresses">
+							<input type="text" id="<?php echo esc_attr( $email_cc ); ?>" name="<?php echo esc_attr( $email_cc ); ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_bcc_role; ?>">BCC</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_bcc_role ); ?>">BCC</label></th>
 						<td>
-							<select id="<?php echo $email_bcc_role; ?>" name="<?php echo $email_bcc_role; ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
+							<select id="<?php echo esc_attr( $email_bcc_role ); ?>" name="<?php echo esc_attr( $email_bcc_role ); ?>" class="chosen-select select-role" data-placeholder="Choose a role (optional)" style="width: 25%">
 								<option></option>
 								<?php wp_dropdown_roles(); ?>
 							</select>
-							<input type="text" id="<?php echo $email_bcc; ?>" name="<?php echo $email_bcc; ?>" style="width: 70%" placeholder="Additional email addresses">
+							<input type="text" id="<?php echo esc_attr( $email_bcc ); ?>" name="<?php echo esc_attr( $email_bcc ); ?>" style="width: 70%" placeholder="Additional email addresses">
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_subject; ?>">Subject</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_subject ); ?>">Subject</label></th>
 						<td>
-							<input type="text" name="<?php echo $email_subject; ?>" style="width: 50%" value="[[site_name]] [post_title] [action]"> Example: "[My Site] Hello World! updated"
+							<input type="text" name="<?php echo esc_attr( $email_subject ); ?>" style="width: 50%" value="[[site_name]] [post_title] [action]"> Example: "[My Site] Hello World! updated"
 						</td>
 					</tr>
 
 					<tr valign="top">
-						<th scope="row"><label for="<?php echo $email_message; ?>">Message</label></th>
+						<th scope="row"><label for="<?php echo esc_attr( $email_message ); ?>">Message</label></th>
 						<td>
 
 							<p>See the Glossary of Shortcodes available for use in this template.</p>
@@ -238,8 +238,8 @@ function email_add_menu_page_callback() {
 					<tr valign="top">
 						<th scope="row"></th>
 						<td>
-							<input type="hidden" name="<?php echo $email_hidden; ?>" value="Y">
-							<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Setup Email') ?>" />
+							<input type="hidden" name="<?php echo esc_attr( $email_hidden ); ?>" value="Y">
+							<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e( 'Setup Email' ) ?>" />
 						</td>
 					</tr>
 
@@ -519,15 +519,14 @@ function email_insert_post() {
 			$success[] = $email_subject;
 		}
 
-		$success[] = 'Edit <a href="'. get_edit_post_link( $post_id ) .'">'. get_the_title( $post_id ) .'</a>';
-
 		if( !empty( $post_id ) ) {
 			$output = '<div class="updated">';
 			if( $success ) {
 				$output .= '<ul>';
 				foreach( $success as $item ) {
-					$output .= '<li>'. $item .'</li>';
+					$output .= '<li>'. esc_html( $item ) .'</li>';
 				}
+				$output .= 'Edit <a href="'. get_edit_post_link( $post_id ) .'">'. get_the_title( $post_id ) .'</a>';
 				$output .= '</ul>';
 			}
 			$output .= '</div>';
